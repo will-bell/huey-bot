@@ -3,6 +3,7 @@ import os
 from random import choice
 from urllib.parse import urlencode
 from urllib.request import Request, urlopen
+import requests
 
 from flask import Flask, request
 
@@ -60,5 +61,6 @@ def send_message(msg):
             'bot_id' : os.getenv('GROUPME_BOT_ID'),
             'text'   : msg,
             }
-    request = Request(url, urlencode(data))
-    json = urlopen(request).read().decode()
+    # request = Request(url, urlencode(data).encode())
+    res = requests.post(url, data=data, headers={})
+    # json = urlopen(request).read().decode()
