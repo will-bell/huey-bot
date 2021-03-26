@@ -41,7 +41,6 @@ def oi_huey(data):
 @app.route('/', methods=['POST'])
 def webhook():
     data = request.get_json()
-    print(data)
 
     # We don't want to reply to ourselves!
     if data['name'] != 'Huey':
@@ -55,14 +54,11 @@ def webhook():
 
 
 def send_message(msg):
-    url  = 'https://api.groupme.com/v3/bots/post?'
+    url  = 'https://api.groupme.com/v3/bots/post'
 
     data = {
             'bot_id' : os.getenv('GROUPME_BOT_ID'),
             'text'   : msg,
             }
-    request = Request(url, urlencode(data).encode())
-    print(request.full_url)
-    print(request.data)
+    request = Request(url, urlencode(data))
     json = urlopen(request).read().decode()
-    print(json)
