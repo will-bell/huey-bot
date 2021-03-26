@@ -61,6 +61,6 @@ def send_message(msg):
             'bot_id' : os.getenv('GROUPME_BOT_ID'),
             'text'   : msg,
             }
-    # request = Request(url, urlencode(data).encode())
-    res = requests.post(url, data=data, headers={})
-    # json = urlopen(request).read().decode()
+    req = Request(url, urlencode(data).encode())
+    # res = requests.post(url, data=data, headers={})
+    json = urlopen(req).read().decode()
