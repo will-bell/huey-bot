@@ -96,7 +96,7 @@ reasons = [
     "go buy a new headset, my dad threw mine at the wall and it exploded",
     "make sure Levi still has all 4 legs",
     "go buy some more chicken stock",
-    "make sure te Diesel has enoug tire pressure",
+    "make sure the Diesel has enough tire pressure",
     "move some dirt",
     "count how many boards are in our fence",
     "take the trash to the curb",
