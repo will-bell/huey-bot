@@ -46,7 +46,7 @@ def webhook():
         if oi_huey(data):
             message = choice(prefixes) + ' ' + choice(reasons)
 
-    message = "Hello I am dumb and can't tell when someone is @'ing me"
+    message = "Hello I am dumb and can't tell when someone is mentioning me"
     send_message(message)
 
     return "ok", 200
