@@ -27,7 +27,7 @@ greetings = [
 ]
 
 negatives = [
-    "Be on in 40 I gotta"
+    "Be on in 40 I gotta",
     "Play without me I have to",
     "Sorry guys I can't I gotta",
     "Maybe later first I have to",
