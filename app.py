@@ -1,5 +1,6 @@
 import os
 from random import choice
+from time import sleep
 
 import requests
 from flask import Flask, request
@@ -38,6 +39,8 @@ def oi_huey(data):
 
 @app.route('/', methods=['POST'])
 def webhook():
+    sleep(2)
+
     data = request.get_json()
 
     # We don't want to reply to ourselves!
@@ -45,7 +48,6 @@ def webhook():
         if oi_huey(data):
             message = choice(prefixes) + ' ' + choice(reasons)
 
-    message = "Hello I am dumb and can't tell when someone is mentioning me"
     send_message(message)
 
     return "ok", 200
@@ -56,8 +58,7 @@ def send_message(msg):
 
     data = {
             'bot_id' : os.getenv('GROUPME_BOT_ID'),
-            # 'bot_id' : '1484862e4299309c77fcce5fc1',
             'text'   : msg,
             }
-    # req = Request(url, data=urlencode(data).encode())
-    # res = requests.post(url, json=data, headers={})
+            
+    res = requests.post(url, json=data, headers={})
