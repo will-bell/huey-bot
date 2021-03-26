@@ -104,7 +104,7 @@ reasons = [
 "keep an eye on the pie in the oven",
 "thaw some fish for my mom",
 "stare into the endless abyss and ponder the meaning of dread and existence",
-"clean my paren'ts bedroom windows",
+"clean my parents' bedroom windows",
 "make sure all the wiring on the thermostat is up to code",
 "count how many cups we have in our cabinet",
 "go plant some trees",
