@@ -111,12 +111,14 @@ reasons = [
     "fill up my water bottle",
     "go weight the kitchen table and make sure its not too heavy",
     "call my dad and see what time he wants dinner",
+    "blow on my sister's soup"
 ]
 
 extra = [
     "shouldn't take too long",
     "be on after that",
-    "don't worry about it"
+    "don't worry about it",
+    "so that's a negative ghost-rider"
 ]
 
 extra = extra + [' ' for _ in range(len(extra))]
