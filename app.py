@@ -21,9 +21,12 @@ greetings = [
     'where you at',
     'where are you',
     'play dota',
+    'play some dota',
     'play war thunder',
+    'play some war thunder',
     'dota?',
-    'war thunder?'
+    'war thunder?', 
+    'get on'
 ]
 
 negatives = [
@@ -46,7 +49,10 @@ reasons = [
     "go to Grenada for the third time today",
     "eat dinner in two hours",
     "go buy Gatorade for my dad",
-    "go buy soy sauce"
+    "go buy soy sauce", 
+    "go get my mom's purse she left at the gas station",
+    "mow a rich guy's field",
+    "drive this tractor down a country mile"
 ]
 
 extra = [
@@ -64,7 +70,7 @@ def detect(text: str, options: List[str]) -> bool:
 
     return False
 
-def oi_huey(data):
+def oi_huey(data) -> bool:
     lower_text = data['text'].lower()
     if detect(lower_text, names):
         if detect(lower_text, greetings):
