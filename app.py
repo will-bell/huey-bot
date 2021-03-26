@@ -1,13 +1,33 @@
 import os
 from random import choice
 from time import sleep
+from typing import List
 
 import requests
 from flask import Flask, request
 
 app = Flask(__name__)
 
-prefixes = [
+names = [
+    'houston',
+    'huey',
+    '@houston',
+    '@houston holsenback',
+    '@huey'
+]
+
+greetings = [
+    'oi',
+    'where you at',
+    'where are you',
+    'play dota',
+    'play war thunder',
+    'dota?',
+    'war thunder?'
+]
+
+negatives = [
+    "Be on in 40 I gotta"
     "Play without me I have to",
     "Sorry guys I can't I gotta",
     "Maybe later first I have to",
@@ -24,31 +44,46 @@ reasons = [
     "hold the light for my dad",
     "do every dog related chore",
     "go to Grenada for the third time today",
-    "eat in dinner in two hours",
+    "eat dinner in two hours",
     "go buy Gatorade for my dad",
     "go buy soy sauce"
 ]
 
+extra = [
+    "shouldn't take too long",
+    "be on after that",
+    "don't worry about it"
+]
+
+extra = extra + [' ' for _ in range(len(extra))]
+
+def detect(text: str, options: List[str]) -> bool:
+    for option in options:
+        if option in text:
+            return True
+
+    return False
 
 def oi_huey(data):
-    if '@Huey' in data['text']:
-        if 'oi' in data['text'].lower():
+    lower_text = data['text'].lower()
+    if detect(lower_text, names):
+        if detect(lower_text, greetings):
             return True
 
     return False
 
 @app.route('/', methods=['POST'])
 def webhook():
-    sleep(2)
+    sleep(1)
 
     data = request.get_json()
 
     # We don't want to reply to ourselves!
     if data['name'] != 'Huey':
         if oi_huey(data):
-            message = choice(prefixes) + ' ' + choice(reasons)
+            message = choice(negatives) + ' ' + choice(reasons) + ' ' + choice(extra)
 
-    send_message(message)
+            send_message(message)
 
     return "ok", 200
 
@@ -60,5 +95,5 @@ def send_message(msg):
             'bot_id' : os.getenv('GROUPME_BOT_ID'),
             'text'   : msg,
             }
-            
+
     res = requests.post(url, json=data, headers={})
