@@ -52,7 +52,10 @@ reasons = [
     "go buy soy sauce", 
     "go get my mom's purse she left at the gas station",
     "mow a rich guy's field",
-    "drive this tractor down a country mile"
+    "drive this tractor down a country mile",
+    "kick a can down a country mile",
+    "beat Waco 'til he shuts up",
+    "ignore Grady for a bit"
 ]
 
 extra = [
