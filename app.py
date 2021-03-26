@@ -60,4 +60,4 @@ def send_message(msg):
             'text'   : msg,
             }
     # req = Request(url, data=urlencode(data).encode())
-    res = requests.post(url, json=data, headers={})
+    # res = requests.post(url, json=data, headers={})
