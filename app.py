@@ -62,6 +62,6 @@ def send_message(msg):
             'text'   : msg,
             }
     request = Request(url, urlencode(data).encode())
-    print(request)
+    print(request.full_url)
     json = urlopen(request).read().decode()
     print(json)
