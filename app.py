@@ -1,12 +1,10 @@
-import os
 import json
-
+import os
+from random import choice
 from urllib.parse import urlencode
 from urllib.request import Request, urlopen
 
 from flask import Flask, request
-
-from random import choice
 
 app = Flask(__name__)
 
@@ -47,7 +45,9 @@ def webhook():
     if data['name'] != 'Huey':
         if oi_huey(data):
             message = choice(prefixes) + ' ' + choice(reasons)
-            send_message(message)
+
+    message = "Hello I am dumb and can't tell when someone is @'ing me"
+    send_message(message)
 
     return "ok", 200
 
