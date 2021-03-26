@@ -21,12 +21,13 @@ reasons = [
     "drive my sister to her friend's house",
     "pick up my sister from a party",
     "watch paint dry",
-    "take my mom to the stor",
+    "take my mom to the store",
     "hold the light for my dad",
     "do every dog related chore",
     "go to Grenada for the third time today",
     "eat in dinner in two hours",
-    "buy Gatorade for my dad"
+    "go buy Gatorade for my dad",
+    "go buy soy sauce"
 ]
 
 
@@ -61,5 +62,6 @@ def send_message(msg):
             'text'   : msg,
             }
     request = Request(url, urlencode(data).encode())
+    print(request)
     json = urlopen(request).read().decode()
     print(json)
