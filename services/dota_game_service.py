@@ -1,12 +1,9 @@
 import os
 import time
-from multiprocessing import Manager
-from typing import Dict, List, NamedTuple
+from typing import Dict, NamedTuple, Tuple
 
-from app import send_message
-from interaction.conversation import oi_huey
 import requests
-
+from common import send_message
 
 API_URL = "https://api.opendota.com/api/"
 
@@ -16,7 +13,7 @@ HERO_MAP = {}
 for entry in hero_data_json:
     HERO_MAP[entry['id']] = entry
 
-PLAYER_ID = os.getenv('PLAYER_ID')
+PLAYER_ID = int(os.getenv('PLAYER_ID'))
 PLAYER_MATCHES_URL = API_URL + f'players/{PLAYER_ID}/matches'
 PLAYER_REFRESH_URL = API_URL + f'players/{PLAYER_ID}/refresh'
 
@@ -51,23 +48,24 @@ class LastGameState(NamedTuple):
     assists: int
 
     # Teammates
-    with_heroes: List[str]
-    with_friends: List[str]
+    with_heroes: Tuple[str]
+    with_friends: Tuple[str]
 
     # Enemies
-    against_heroes: List[str]
+    against_heroes: Tuple[str]
 
 
-def update_last_game_state(last_game_state: LastGameState, match_data: Dict[str]):
+def update_last_game_state(last_game_state: LastGameState, match_data: dict):
     # Fill out the match data fields
     last_game_state.match_id = match_data['match_id']
     last_game_state.start_time = match_data['start_time']
 
     player_data = None
-    
     for entry in match_data['players']:
-        if entry['account_id'] == PLAYER_ID:
-            player_data = entry
+        if entry['account_id']:
+            if int(entry['account_id']) == PLAYER_ID:
+                player_data = entry
+                break
     
     last_game_state.side = 'Radiant' if player_data['isRadiant'] else 'Dire'
     last_game_state.victory = bool(player_data['win'])
@@ -99,7 +97,13 @@ def update_last_game_state(last_game_state: LastGameState, match_data: Dict[str]
         else:
             # Add enemies' heroes' names to the list
             against_heroes.append(HERO_MAP[entry['hero_id']]['localized_name'])
+    
+    last_game_state.with_heroes = tuple(with_heroes)
+    last_game_state.with_friends = tuple(with_friends)
+    last_game_state.against_heroes = tuple(against_heroes)
 
+    # TODO: REMOVE THIS
+    print('updated last-game state')
 
 
 def generate_game_notification(last_game_state: LastGameState) -> str:
@@ -109,36 +113,49 @@ def generate_game_notification(last_game_state: LastGameState) -> str:
     return f'Just {won_or_lost} a game as {hero}'
 
 
-def dota_game_service(last_game_state: LastGameState):
-    if time.time() - last_game_state.last_query_time >= 60.:
-        if last_game_state.match_id > 0:
-            try:
-                # Refresh the player's match data on OpenDota.com
-                refresh_response = requests.post(url=PLAYER_REFRESH_URL)
+def generate_old_game_notification(last_game_state: LastGameState) -> str:
+    hero = last_game_state.hero
+    won_or_lost = 'won' if last_game_state.victory else 'lost'
 
+    return f'I {won_or_lost} my last game as {hero}'
+
+
+def dota_game_service(last_game_state: LastGameState):
+    while True:
+        if time.time() - last_game_state.last_query_time >= 10.:
+            
+            # TODO: REMOVE THIS
+            print('time to check')
+
+            if last_game_state.match_id > 0:
+                try:
+                    # Refresh the player's match data on OpenDota.com
+                    refresh_response = requests.post(url=PLAYER_REFRESH_URL)
+
+                    # Get the latest match data
+                    match_id = requests.get(url=PLAYER_MATCHES_URL, params={'limit': 1}).json()[0]['match_id']
+
+                    if match_id != last_game_state.match_id:
+                        match_data = requests.get(url=MATCHES_URL + str(match_id)).json()
+
+                        # Update the last game state with the new game's information
+                        update_last_game_state(last_game_state, match_data)
+
+                        # Post to the group chat
+                        send_message(generate_game_notification(last_game_state))
+
+                except:
+                    pass
+
+            else:
                 # Get the latest match data
                 match_id = requests.get(url=PLAYER_MATCHES_URL, params={'limit': 1}).json()[0]['match_id']
+                print(f'Last match id: {match_id}')
 
-                if match_id != last_game_state.match_id:
-                    match_data = requests.get(url=MATCHES_URL + str(match_id))
+                # Get the latest match data
+                match_data = requests.get(url=MATCHES_URL + str(match_id)).json()
 
-                    # Update the last game state with the new game's information
-                    update_last_game_state(last_game_state, match_data)
-
-                    # Post to the group chat
-                    send_message(generate_game_notification(last_game_state))
-
-            except:
-                pass
-
-        else:
-            # Get the latest match data
-            match_id = requests.get(url=PLAYER_MATCHES_URL, params={'limit': 1}).json()[0]['match_id']
-
-            # Get the latest match data
-            match_data = requests.get(url=MATCHES_URL + str(match_id))
-
-            # Give the last game state its data
-            update_last_game_state(last_game_state, match_data)
-        
-        last_game_state.last_query_time = time.time()
+                # Give the last game state its data
+                update_last_game_state(last_game_state, match_data)
+            
+            last_game_state.last_query_time = time.time()
