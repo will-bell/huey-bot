@@ -6,11 +6,13 @@ from typing import NamedTuple, Tuple
 
 import requests
 from flask import Flask, request
-from flask_sqlalchemy import SQLAlchemy
 
 from common import send_message
 from interaction.conversation import (generate_excuse, oi_huey,
                                       question_about_last_game)
+
+# from flask_sqlalchemy import SQLAlchemy
+
 
 # from services.dota_game_service import (dota_game_service,
 #                                         generate_old_game_notification)
