@@ -45,7 +45,7 @@ def webhook():
     data = request.get_json()
 
     if data['name'] != 'Test Bot':
-        #send_message(generate_player_gpm(get_last_match_data()))
+
         if oi_huey(data):
             send_message(generate_excuse())
 
