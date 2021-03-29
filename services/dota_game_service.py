@@ -85,6 +85,7 @@ def make_last_game_state_args(match_data: dict) -> tuple:
     with_heroes = []
     against_heroes = []
     with_friends = []
+    friends_deaths[]
     player_is_radiant = player_data['isRadiant']
     for entry in match_data['players']:
 
