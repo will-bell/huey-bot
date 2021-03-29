@@ -45,12 +45,12 @@ def webhook():
     data = request.get_json()
 
     if data['name'] != 'Test Bot':
-        send_message(generate_player_gpm(get_last_match_data()))
-        # if oi_huey(data):
-        #     send_message(generate_excuse())
+        #send_message(generate_player_gpm(get_last_match_data()))
+        if oi_huey(data):
+            send_message(generate_excuse())
 
-        # elif question_about_last_game(data):
-        #     send_message(generate_old_game_notification(get_last_match_data()))
+        elif question_about_last_game(data):
+            send_message(generate_old_game_notification(get_last_match_data()))
 
     return "ok", 200
 
