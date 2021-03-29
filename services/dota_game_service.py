@@ -153,6 +153,7 @@ def generate_old_game_notification(last_game_state: LastGameState) -> str:
     with_friends = ''
     insult_friend = ''
     gold_per_minute = last_game_state.houstons_GPM
+    deaths = last_game_state.deaths
     if len(last_game_state.with_friends) == 1:
         with_friends = 'with ' + last_game_state.with_friends[0]
         insult_friend = f'. {last_game_state.with_friends[0]} tried their best but oof'
@@ -166,7 +167,7 @@ def generate_old_game_notification(last_game_state: LastGameState) -> str:
         with_friends = f'with {last_game_state.with_friends[0]} and {last_game_state.with_friends[1]}'
         insult_friend = f'. {choice(last_game_state.with_friends)} tried their best but oof'
 
-    return f'I {won_or_lost} my last game as {hero} {with_friends} {insult_friend}. I had {gold_per_minute} GPM.'
+    return f'I {won_or_lost} my last game as {hero} {with_friends} {insult_friend}. I had {gold_per_minute} GPM and {deaths} deaths.'
 
 
 def get_last_match_data() -> LastGameState:
