@@ -55,10 +55,10 @@ class LastGameState(NamedTuple):
     against_heroes: Tuple[str]
 
 
-def update_last_game_state(last_game_state: LastGameState, match_data: dict):
+def make_last_game_state_args(match_data: dict) -> tuple:
     # Fill out the match data fields
-    last_game_state.match_id = match_data['match_id']
-    last_game_state.start_time = match_data['start_time']
+    match_id = match_data['match_id']
+    start_time = match_data['start_time']
 
     player_data = None
     for entry in match_data['players']:
@@ -67,15 +67,15 @@ def update_last_game_state(last_game_state: LastGameState, match_data: dict):
                 player_data = entry
                 break
     
-    last_game_state.side = 'Radiant' if player_data['isRadiant'] else 'Dire'
-    last_game_state.victory = bool(player_data['win'])
-    last_game_state.duration = int(player_data['duration'] / 60)
+    side = 'Radiant' if player_data['isRadiant'] else 'Dire'
+    victory = bool(player_data['win'])
+    duration = int(player_data['duration'] / 60)
     
     # Fill out the player data fields
-    last_game_state.hero = HERO_MAP[player_data['hero_id']]['localized_name']
-    last_game_state.kills = player_data['kills']
-    last_game_state.deaths = player_data['deaths']
-    last_game_state.assists = player_data['assists']
+    hero = HERO_MAP[player_data['hero_id']]['localized_name']
+    kills = player_data['kills']
+    deaths = player_data['deaths']
+    assists = player_data['assists']
 
     # Find heroes on either side and friends
     with_heroes = []
@@ -98,12 +98,30 @@ def update_last_game_state(last_game_state: LastGameState, match_data: dict):
             # Add enemies' heroes' names to the list
             against_heroes.append(HERO_MAP[entry['hero_id']]['localized_name'])
     
-    last_game_state.with_heroes = tuple(with_heroes)
-    last_game_state.with_friends = tuple(with_friends)
-    last_game_state.against_heroes = tuple(against_heroes)
+    with_heroes = tuple(with_heroes)
+    with_friends = tuple(with_friends)
+    against_heroes = tuple(against_heroes)
 
-    # TODO: REMOVE THIS
-    print('updated last-game state')
+    return time.time(), match_id, start_time, side, victory, duration, hero, kills, deaths, assists, with_heroes, with_friends, against_heroes
+
+
+def update_last_game_state(last_game_state: LastGameState, match_data: dict):
+    last_query_time, match_id, start_time, side, victory, duration, hero, kills, deaths, assists, with_heroes, with_friends, against_heroes = \
+        make_last_game_state_args(match_data)
+
+    last_game_state.last_query_time = last_query_time
+    last_game_state.match_id = match_id
+    last_game_state.start_time = start_time
+    last_game_state.side = side
+    last_game_state.victory = victory
+    last_game_state.duration = duration
+    last_game_state.hero = hero
+    last_game_state.kills = kills
+    last_game_state.deaths = deaths
+    last_game_state.assists = assists
+    last_game_state.with_heroes = with_heroes
+    last_game_state.with_friends = with_friends
+    last_game_state.against_heroes = against_heroes
 
 
 def generate_game_notification(last_game_state: LastGameState) -> str:
@@ -118,6 +136,17 @@ def generate_old_game_notification(last_game_state: LastGameState) -> str:
     won_or_lost = 'won' if last_game_state.victory else 'lost'
 
     return f'I {won_or_lost} my last game as {hero}'
+
+
+def get_last_match_data() -> LastGameState:
+    # Refresh the player's match data on OpenDota.com
+    refresh_response = requests.post(url=PLAYER_REFRESH_URL)
+
+    # Get the latest match data
+    match_id = requests.get(url=PLAYER_MATCHES_URL, params={'limit': 1}).json()[0]['match_id']
+    match_data = requests.get(url=MATCHES_URL + str(match_id)).json()
+
+    return LastGameState(*make_last_game_state(match_data))
 
 
 def dota_game_service(last_game_state: LastGameState):
@@ -157,5 +186,3 @@ def dota_game_service(last_game_state: LastGameState):
 
                 # Give the last game state its data
                 update_last_game_state(last_game_state, match_data)
-            
-            last_game_state.last_query_time = time.time()
