@@ -1,5 +1,6 @@
 import os
 import time
+from random import choice
 from typing import Dict, NamedTuple, Tuple
 
 import requests
@@ -134,8 +135,23 @@ def generate_game_notification(last_game_state: LastGameState) -> str:
 def generate_old_game_notification(last_game_state: LastGameState) -> str:
     hero = last_game_state.hero
     won_or_lost = 'won' if last_game_state.victory else 'lost'
+    
+    with_friends = ''
+    insult_friend = ''
+    if len(last_game_state.with_friends) == 1:
+        with_friends = last_game_state.with_friends[0]
+        insult_friend = f', {last_game_state.with_friends[0]} tried his best but oof'
 
-    return f'I {won_or_lost} my last game as {hero}'
+    elif len(last_game_state.with_friends) > 2:
+        friend_list = last_game_state.with_friends[:-1] + ['and', last_game_state[-1]]
+        with_friends = ', '.join(friend_list)
+        insult_friend = f', {choice(last_game_state.with_friends)} tried their best but oof'
+
+    elif len(last_game_state.with_friends) == 2:
+        with_friends = f'{last_game_state[0]} and {last_game_state[1]}'
+        insult_friend = f', {choice(last_game_state.with_friends)} tried their best but oof'
+
+    return f'I {won_or_lost} my last game {with_friends} as {hero}{insult_friend}'
 
 
 def get_last_match_data() -> LastGameState:
