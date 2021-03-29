@@ -55,7 +55,7 @@ class LastGameState(NamedTuple):
     # Enemies
     against_heroes: Tuple[str]
     houstons_GPM: int
-    friends_deaths: Tuple[str]
+    #friends_deaths: Tuple[str]
 
 
 def make_last_game_state_args(match_data: dict) -> tuple:
@@ -85,7 +85,7 @@ def make_last_game_state_args(match_data: dict) -> tuple:
     with_heroes = []
     against_heroes = []
     with_friends = []
-    friends_deaths = []
+    #friends_deaths = []
     player_is_radiant = player_data['isRadiant']
     for entry in match_data['players']:
 
@@ -97,7 +97,7 @@ def make_last_game_state_args(match_data: dict) -> tuple:
             # If the teammate is in the friends list, add it to the list of friends played with
             if entry['account_id'] in FRIENDS_MAP.keys():
                 with_friends.append(FRIENDS_MAP[entry['account_id']])
-                friends_deaths.append(FRIENDS_MAP[entry['deaths']])
+                #friends_deaths.append(FRIENDS_MAP[entry['deaths']])
         
         # Look for enemies
         else:
@@ -107,13 +107,13 @@ def make_last_game_state_args(match_data: dict) -> tuple:
     with_heroes = tuple(with_heroes)
     with_friends = tuple(with_friends)
     against_heroes = tuple(against_heroes)
-    friends_deaths = tuple(friends_deaths)
+    #friends_deaths = tuple(friends_deaths)
 
-    return time.time(), match_id, start_time, side, victory, duration, hero, kills, deaths, assists, with_heroes, with_friends, against_heroes, player_gpm, friends_deaths
+    return time.time(), match_id, start_time, side, victory, duration, hero, kills, deaths, assists, with_heroes, with_friends, against_heroes, player_gpm, #friends_deaths
 
 
 def update_last_game_state(last_game_state: LastGameState, match_data: dict):
-    last_query_time, match_id, start_time, side, victory, duration, hero, kills, deaths, assists, with_heroes, with_friends, against_heroes, player_gpm, friends_deaths = \
+    last_query_time, match_id, start_time, side, victory, duration, hero, kills, deaths, assists, with_heroes, with_friends, against_heroes, player_gpm, = \
         make_last_game_state_args(match_data)
 
     last_game_state.last_query_time = last_query_time
@@ -130,7 +130,7 @@ def update_last_game_state(last_game_state: LastGameState, match_data: dict):
     last_game_state.with_friends = with_friends
     last_game_state.against_heroes = against_heroes
     last_game_state.houstons_GPM = player_gpm
-    last_game_state.friends_deaths = friends_deaths
+    #last_game_state.friends_deaths = friends_deaths
 
 
 def generate_game_notification(last_game_state: LastGameState) -> str:
