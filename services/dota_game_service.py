@@ -54,6 +54,7 @@ class LastGameState(NamedTuple):
 
     # Enemies
     against_heroes: Tuple[str]
+    houstons_GPM: int
 
 
 def make_last_game_state_args(match_data: dict) -> tuple:
@@ -77,6 +78,7 @@ def make_last_game_state_args(match_data: dict) -> tuple:
     kills = player_data['kills']
     deaths = player_data['deaths']
     assists = player_data['assists']
+    player_gpm = player_data['gold_per_min']
 
     # Find heroes on either side and friends
     with_heroes = []
@@ -103,11 +105,11 @@ def make_last_game_state_args(match_data: dict) -> tuple:
     with_friends = tuple(with_friends)
     against_heroes = tuple(against_heroes)
 
-    return time.time(), match_id, start_time, side, victory, duration, hero, kills, deaths, assists, with_heroes, with_friends, against_heroes
+    return time.time(), match_id, start_time, side, victory, duration, hero, kills, deaths, assists, with_heroes, with_friends, against_heroes, player_gpm
 
 
 def update_last_game_state(last_game_state: LastGameState, match_data: dict):
-    last_query_time, match_id, start_time, side, victory, duration, hero, kills, deaths, assists, with_heroes, with_friends, against_heroes = \
+    last_query_time, match_id, start_time, side, victory, duration, hero, kills, deaths, assists, with_heroes, with_friends, against_heroes, player_gpm = \
         make_last_game_state_args(match_data)
 
     last_game_state.last_query_time = last_query_time
@@ -123,6 +125,7 @@ def update_last_game_state(last_game_state: LastGameState, match_data: dict):
     last_game_state.with_heroes = with_heroes
     last_game_state.with_friends = with_friends
     last_game_state.against_heroes = against_heroes
+    last_game_state.houstons_GPM = player_gpm
 
 
 def generate_game_notification(last_game_state: LastGameState) -> str:
@@ -130,6 +133,12 @@ def generate_game_notification(last_game_state: LastGameState) -> str:
     won_or_lost = 'won' if last_game_state.victory else 'lost'
 
     return f'Just {won_or_lost} a game as {hero}'
+
+
+def generate_player_gpm(last_game_state: LastGameState) -> str:
+    player_gpm = last_game_state.houstons_GPM
+
+    return str(player_gpm)
 
 
 def generate_old_game_notification(last_game_state: LastGameState) -> str:
