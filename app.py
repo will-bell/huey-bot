@@ -50,7 +50,7 @@ def webhook():
             send_message(generate_excuse())
 
         elif question_about_last_game(data):
-            send_message(generate_old_game_notification(last_game_state))
+            send_message(generate_old_game_notification(db))
 
     return "ok", 200
 
@@ -58,9 +58,11 @@ def webhook():
 if __name__ == '__main__':
     db.create_all()
 
+    db_manager = Manager()
+    
+
     manager = Manager()
     last_game_state = manager.Namespace()
-    last_game_state.database = db
     last_game_state.last_query_time = time.time()
     last_game_state.match_id = -1
     last_game_state.start_time = -1
@@ -77,5 +79,5 @@ if __name__ == '__main__':
 
     p = Process(target=dota_game_service, args=(last_game_state,))
     p.start()  
-    app.run(debug=False, use_reloader=False)
+    app.run(debug=True, use_reloader=False)
     p.join()
