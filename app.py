@@ -10,7 +10,8 @@ from interaction.conversation import (generate_excuse, oi_huey,
                                       question_about_last_game)
 from services.dota_game_service import (dota_game_service,
                                         generate_old_game_notification,
-                                        get_last_match_data)
+                                        get_last_match_data,
+                                        generate_houstons_GPM)
 
 app = Flask(__name__)
 
@@ -45,12 +46,13 @@ def webhook():
     data = request.get_json()
 
     if data['name'] != 'Huey':
-        if oi_huey(data):
-            send_message(generate_excuse())
+        send_message(generate_houstons_GPM(get_last_match_data()))
+        # if oi_huey(data):
+        #     send_message(generate_excuse())
 
-        elif question_about_last_game(data):
-            send_message(generate_old_game_notification(get_last_match_data()))
-
+        # elif question_about_last_game(data):
+        #     send_message(generate_old_game_notification(get_last_match_data()))
+        
     return "ok", 200
 
 
@@ -70,6 +72,7 @@ if __name__ == '__main__':
     last_game_state.with_heroes = tuple()
     last_game_state.with_friends = tuple()
     last_game_state.against_heroes = tuple()
+    last_game_state.houstons_GPM = -1
 
     p = Process(target=dota_game_service, args=(last_game_state,))
     p.start()  
