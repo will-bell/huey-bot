@@ -146,7 +146,7 @@ def get_last_match_data() -> LastGameState:
     match_id = requests.get(url=PLAYER_MATCHES_URL, params={'limit': 1}).json()[0]['match_id']
     match_data = requests.get(url=MATCHES_URL + str(match_id)).json()
 
-    return LastGameState(*make_last_game_state(match_data))
+    return LastGameState(*make_last_game_state_args(match_data))
 
 
 def dota_game_service(last_game_state: LastGameState):
