@@ -19,6 +19,22 @@ app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = True
 
 db = SQLAlchemy(app)
 
+manager = Manager()
+last_game_state = manager.Namespace()
+last_game_state.last_query_time = time.time()
+last_game_state.match_id = -1
+last_game_state.start_time = -1
+last_game_state.side = ''
+last_game_state.victory = 0
+last_game_state.duration = -1
+last_game_state.hero = ''
+last_game_state.kills = -1
+last_game_state.deaths = -1
+last_game_state.assists = -1
+last_game_state.with_heroes = tuple()
+last_game_state.with_friends = tuple()
+last_game_state.against_heroes = tuple()
+
 
 class RecentGamesDB(db.Model):
     match_id = db.Column(db.Integer, primary_key=True)
@@ -50,7 +66,7 @@ def webhook():
             send_message(generate_excuse())
 
         elif question_about_last_game(data):
-            send_message(generate_old_game_notification(db))
+            send_message(generate_old_game_notification(last_game_state))
 
     return "ok", 200
 
@@ -59,23 +75,6 @@ if __name__ == '__main__':
     db.create_all()
 
     db_manager = Manager()
-    
-
-    manager = Manager()
-    last_game_state = manager.Namespace()
-    last_game_state.last_query_time = time.time()
-    last_game_state.match_id = -1
-    last_game_state.start_time = -1
-    last_game_state.side = ''
-    last_game_state.victory = 0
-    last_game_state.duration = -1
-    last_game_state.hero = ''
-    last_game_state.kills = -1
-    last_game_state.deaths = -1
-    last_game_state.assists = -1
-    last_game_state.with_heroes = tuple()
-    last_game_state.with_friends = tuple()
-    last_game_state.against_heroes = tuple()
 
     p = Process(target=dota_game_service, args=(last_game_state,))
     p.start()  
