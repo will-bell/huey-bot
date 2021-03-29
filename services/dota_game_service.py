@@ -143,7 +143,7 @@ def generate_old_game_notification(last_game_state: LastGameState) -> str:
         insult_friend = f', {last_game_state.with_friends[0]} tried his best but oof'
 
     elif len(last_game_state.with_friends) > 2:
-        friend_list = last_game_state.with_friends[:-1] + ['and', last_game_state[-1]]
+        friend_list = list(last_game_state.with_friends[:-1]) + ['and', last_game_state[-1]]
         with_friends = ', '.join(friend_list)
         insult_friend = f', {choice(last_game_state.with_friends)} tried their best but oof'
 
