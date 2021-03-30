@@ -54,12 +54,11 @@ def webhook():
     data = request.get_json()
 
     if data['name'] != 'Huey':
-        send_message(generate_houstons_GPM(get_last_match_data()))
-        # if oi_huey(data):
-        #     send_message(generate_excuse())
+        if oi_huey(data):
+            send_message(generate_excuse())
 
-        # elif question_about_last_game(data):
-        #     send_message(generate_old_game_notification(get_last_match_data()))
+        elif question_about_last_game(data):
+            send_message(generate_old_game_notification(get_last_match_data()))
         
     return "ok", 200
 
