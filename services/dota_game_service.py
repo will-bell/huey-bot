@@ -180,11 +180,10 @@ def generate_old_game_notification(last_game_state: LastGameState) -> str:
     while x < (death_length / 2):
         if int(friends_deaths[x+1]) > previous_value:
             previous_value = friends_deaths[x+1]
-            most_deaths = friends_deaths[x] + previous_value
+            most_deaths = friends_deaths[x] + ' had an impressive' + previous_value + ' deaths. Oof'
         x = x+2
 
     print(most_deaths)
-
     # for value in friends_deaths
     #     if current_value = 0:
     #         most_deaths = 
@@ -205,7 +204,8 @@ def generate_old_game_notification(last_game_state: LastGameState) -> str:
         with_friends = f'with {last_game_state.with_friends[0]} and {last_game_state.with_friends[1]}'
         insult_friend = f'. {choice(last_game_state.with_friends)} tried their best but oof'
 
-    return f'I {won_or_lost} my last game as {hero} {with_friends} {insult_friend}. I had {gold_per_minute} GPM -- Test phrase {friends_deaths}'
+    return f'I {won_or_lost} my last game as {hero} {with_friends}. {most_deaths}.'
+    # return f'I {won_or_lost} my last game as {hero} {with_friends} {insult_friend}. I had {gold_per_minute} GPM -- Test phrase {friends_deaths}'
 
 
 def get_last_match_data() -> LastGameState:
