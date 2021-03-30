@@ -93,6 +93,7 @@ def make_last_game_state_args(match_data: dict) -> tuple:
     deaths = player_data['deaths']
     assists = player_data['assists']
     player_gpm = player_data['gold_per_min']
+    gold_per_min = player_data['gold_per_min']
 
     # Find heroes on either side and friends
     with_heroes = []

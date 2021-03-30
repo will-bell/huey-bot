@@ -1,3 +1,4 @@
+import logging
 import time
 from multiprocessing import Manager, Process, Value
 
@@ -12,8 +13,6 @@ from services.dota_game_service import (dota_game_service,
                                         generate_old_game_notification,
                                         get_last_match_data)
 from services.keep_alive_service import keep_alive
-
-import logging
 
 app = Flask(__name__)
 
@@ -61,7 +60,7 @@ def webhook():
 
         elif question_about_last_game(data):
             send_message(generate_old_game_notification(get_last_match_data()))
-
+        
     return "ok", 200
 
 
