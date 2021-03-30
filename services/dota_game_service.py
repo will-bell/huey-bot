@@ -180,7 +180,7 @@ def generate_old_game_notification(last_game_state: LastGameState) -> str:
         if friends_deaths[x+1] > previous_value:
             previous_value = friends_deaths[x+1]
             most_deaths = friends_deaths[x] + previous_value
-    x = x+1
+        x = x+1
 
     print(most_deaths)
 
