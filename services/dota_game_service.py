@@ -67,7 +67,7 @@ def make_last_game_state_args(match_data: dict) -> tuple:
     friends_deaths = []
     for entry in match_data['players']:
         if entry['account_id']:
-            if int(entry['account_id']) in (PLAYER_ID, '120813182', '106692261', '12984717', '95549436', '133187493', '55335864', '126859835'):
+            if int(entry['account_id']) in (PLAYER_ID, 120813182, 106692261, 12984717, 95549436, 133187493, 55335864, 126859835):
                 if int(entry['account_id']) == PLAYER_ID:
                     friends_deaths.append('Houston')
                     friends_deaths.append(int(entry['deaths']))
