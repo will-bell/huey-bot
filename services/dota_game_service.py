@@ -175,6 +175,7 @@ def generate_old_game_notification(last_game_state: LastGameState) -> str:
 
     most_deaths = ''
     previous_value = 0
+    x = 0
 
     while x < (death_length / 2):
         if friends_deaths[x+1] > previous_value:
