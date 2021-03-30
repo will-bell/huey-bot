@@ -180,7 +180,7 @@ def generate_old_game_notification(last_game_state: LastGameState) -> str:
         with_friends = f'with {last_game_state.with_friends[0]} and {last_game_state.with_friends[1]}'
         insult_friend = f'. {choice(last_game_state.with_friends)} tried their best but oof'
 
-    return f'I {won_or_lost} my last game as {hero} {with_friends} {insult_friend}. I had {gold_per_minute} GPM and {deaths} deaths.' #Test phrase {friends_deaths}'
+    return f'I {won_or_lost} my last game as {hero} {with_friends} {insult_friend}. I had {gold_per_minute} GPM' #and {deaths} deaths.' #Test phrase {friends_deaths}'
 
 
 def get_last_match_data() -> LastGameState:
