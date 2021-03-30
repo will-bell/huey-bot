@@ -53,8 +53,7 @@ def webhook():
 
     data = request.get_json()
 
-    if data['name'] != 'Test Bot':
-
+    if data['name'] != 'Huey':
         if oi_huey(data):
             send_message(generate_excuse())
 
