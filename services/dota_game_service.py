@@ -71,7 +71,8 @@ def make_last_game_state_args(match_data: dict) -> tuple:
             if int(entry['account_id']) in (PLAYER_ID, 120813182, 106692261, 12984717, 95549436, 133187493, 55335864, 126859835, 160613912):
                 if int(entry['account_id']) == PLAYER_ID:
                     friends_deaths.append("Houston")
-                    friends_deaths.append(str(int(entry['deaths'])))
+                    #friends_deaths.append(str(int(entry['deaths'])))
+                    friends_deaths.append('69')
                 else:
                     friends_deaths.append(FRIENDS_MAP[entry['account_id']])
                     friends_deaths.append(str(int(entry['deaths'])))
@@ -171,8 +172,6 @@ def generate_old_game_notification(last_game_state: LastGameState) -> str:
     most_deaths = ''
     previous_value = 0
     x = 0
-
-    friends_deaths[2] = '69'
 
     #determines who had the highest number of deaths and insults them
 
