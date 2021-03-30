@@ -3,7 +3,8 @@ names = [
     'huey',
     '@houston',
     '@houston holsenback',
-    '@huey'
+    '@huey',
+    'hoss'
 ]
 
 greetings = [
@@ -16,6 +17,7 @@ greetings = [
     'play some war thunder',
     'dota?',
     'war thunder?', 
+    'wya',
     'get on'
 ]
 

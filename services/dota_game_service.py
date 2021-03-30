@@ -28,6 +28,7 @@ FRIENDS_MAP = {
     133187493: 'Jake',
     55335864: 'Steve',
     126859835: 'Tony',
+    78683803: 'TestMan'
 }
 
 
@@ -67,7 +68,7 @@ def make_last_game_state_args(match_data: dict) -> tuple:
     friends_deaths = []
     for entry in match_data['players']:
         if entry['account_id']:
-            if int(entry['account_id']) in (PLAYER_ID, 120813182, 106692261, 12984717, 95549436, 133187493, 55335864, 126859835):
+            if int(entry['account_id']) in (PLAYER_ID, 120813182, 106692261, 12984717, 95549436, 133187493, 55335864, 126859835, 78683803):
                 if int(entry['account_id']) == PLAYER_ID:
                     friends_deaths.append("Houston")
                     friends_deaths.append(str(int(entry['deaths'])))
@@ -118,7 +119,7 @@ def make_last_game_state_args(match_data: dict) -> tuple:
     with_heroes = tuple(with_heroes)
     with_friends = tuple(with_friends)
     against_heroes = tuple(against_heroes)
-    #friends_deaths = tuple(friends_deaths)
+    friends_deaths = tuple(friends_deaths)
 
     return time.time(), match_id, start_time, side, victory, duration, hero, kills, deaths, assists, with_heroes, with_friends, against_heroes, player_gpm, friends_deaths
 
@@ -165,7 +166,6 @@ def generate_old_game_notification(last_game_state: LastGameState) -> str:
     insult_friend = ''
     gold_per_minute = last_game_state.houstons_GPM
     friends_deaths = last_game_state.friends_deaths
-    #deaths = last_game_state.deaths
     if len(last_game_state.with_friends) == 1:
         with_friends = 'with ' + last_game_state.with_friends[0]
         insult_friend = f'. {last_game_state.with_friends[0]} tried their best but oof'
