@@ -53,7 +53,8 @@ def webhook():
 
     data = request.get_json()
 
-    if data['name'] != 'Huey':
+    if data['name'] != 'Test Bot':
+
         if oi_huey(data):
             send_message(generate_excuse())
 
@@ -86,6 +87,7 @@ if __name__ == '__main__':
     last_game_state.with_friends = tuple()
     last_game_state.against_heroes = tuple()
     last_game_state.houstons_GPM = -1
+    last_game_state.friends_deaths = ''
 
     p = Process(target=dota_game_service, args=(last_game_state,))
     p.start()
