@@ -167,28 +167,18 @@ def generate_old_game_notification(last_game_state: LastGameState) -> str:
     gold_per_minute = last_game_state.houstons_GPM
     friends_deaths = last_game_state.friends_deaths
 
-    death_length = len(friends_deaths) 
-    #print(death_length)
-
-    # for value in friends_deaths:
-    #     print(value)    
-
+    death_length = len(friends_deaths)
     most_deaths = ''
     previous_value = 0
     x = 0
 
+    #determines who had the highest number of deaths and insults them
+
     while x < (death_length / 2):
         if int(friends_deaths[x+1]) > previous_value:
             previous_value = friends_deaths[x+1]
-            most_deaths = friends_deaths[x] + ' had an impressive' + previous_value + ' deaths. Oof'
+            most_deaths = friends_deaths[x] + ' had an impressive ' + previous_value + ' deaths. Oof'
         x = x+2
-
-    print(most_deaths)
-    # for value in friends_deaths
-    #     if current_value = 0:
-    #         most_deaths = 
-    #     elif current_value > value:
-    #         current_value = value
 
 
     if len(last_game_state.with_friends) == 1:
