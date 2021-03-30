@@ -55,7 +55,7 @@ class LastGameState(NamedTuple):
     # Enemies
     against_heroes: Tuple[str]
     houstons_GPM: int
-    #friends_deaths: str
+    friends_deaths: str
 
 
 def make_last_game_state_args(match_data: dict) -> tuple:
@@ -63,17 +63,17 @@ def make_last_game_state_args(match_data: dict) -> tuple:
     match_id = match_data['match_id']
     start_time = match_data['start_time']
 
-    # current_player_data = None
-    # friends_deaths = []
-    # for entry in match_data['players']:
-    #     if entry['account_id']:
-    #         if int(entry['account_id']) in (PLAYER_ID, '120813182', '106692261', '12984717', '95549436', '133187493', '55335864', '126859835'):
-    #             if int(entry['account_id']) == PLAYER_ID:
-    #                 friends_deaths.append('Houston')
-    #                 friends_deaths.append(int(entry['deaths']))
-    #             else:
-    #                 friends_deaths.append(FRIENDS_MAP[entry['account_id']])
-    #                 friends_deaths.append(int(entry['deaths']))
+    current_player_data = None
+    friends_deaths = []
+    for entry in match_data['players']:
+        if entry['account_id']:
+            if int(entry['account_id']) in (PLAYER_ID, '120813182', '106692261', '12984717', '95549436', '133187493', '55335864', '126859835'):
+                if int(entry['account_id']) == PLAYER_ID:
+                    friends_deaths.append('Houston')
+                    friends_deaths.append(int(entry['deaths']))
+                else:
+                    friends_deaths.append(FRIENDS_MAP[entry['account_id']])
+                    friends_deaths.append(int(entry['deaths']))
 
 
     player_data = None
@@ -98,7 +98,6 @@ def make_last_game_state_args(match_data: dict) -> tuple:
     with_heroes = []
     against_heroes = []
     with_friends = []
-    #friends_deaths = []
     player_is_radiant = player_data['isRadiant']
     for entry in match_data['players']:
 
@@ -121,11 +120,11 @@ def make_last_game_state_args(match_data: dict) -> tuple:
     against_heroes = tuple(against_heroes)
     #friends_deaths = tuple(friends_deaths)
 
-    return time.time(), match_id, start_time, side, victory, duration, hero, kills, deaths, assists, with_heroes, with_friends, against_heroes, player_gpm, #friends_deaths
+    return time.time(), match_id, start_time, side, victory, duration, hero, kills, deaths, assists, with_heroes, with_friends, against_heroes, player_gpm, friends_deaths
 
 
 def update_last_game_state(last_game_state: LastGameState, match_data: dict):
-    last_query_time, match_id, start_time, side, victory, duration, hero, kills, deaths, assists, with_heroes, with_friends, against_heroes, player_gpm,  = \
+    last_query_time, match_id, start_time, side, victory, duration, hero, kills, deaths, assists, with_heroes, with_friends, against_heroes, player_gpm, friends_deaths  = \
         make_last_game_state_args(match_data)
 
     last_game_state.last_query_time = last_query_time
@@ -142,7 +141,7 @@ def update_last_game_state(last_game_state: LastGameState, match_data: dict):
     last_game_state.with_friends = with_friends
     last_game_state.against_heroes = against_heroes
     last_game_state.houstons_GPM = player_gpm
-    #last_game_state.friends_deaths = friends_deaths
+    last_game_state.friends_deaths = friends_deaths
 
 
 def generate_game_notification(last_game_state: LastGameState) -> str:
@@ -165,7 +164,7 @@ def generate_old_game_notification(last_game_state: LastGameState) -> str:
     with_friends = ''
     insult_friend = ''
     gold_per_minute = last_game_state.houstons_GPM
-    #friends_deaths = last_game_state.friends_deaths
+    friends_deaths = last_game_state.friends_deaths
     #deaths = last_game_state.deaths
     if len(last_game_state.with_friends) == 1:
         with_friends = 'with ' + last_game_state.with_friends[0]
@@ -180,7 +179,7 @@ def generate_old_game_notification(last_game_state: LastGameState) -> str:
         with_friends = f'with {last_game_state.with_friends[0]} and {last_game_state.with_friends[1]}'
         insult_friend = f'. {choice(last_game_state.with_friends)} tried their best but oof'
 
-    return f'I {won_or_lost} my last game as {hero} {with_friends} {insult_friend}. I had {gold_per_minute} GPM' #and {deaths} deaths.' #Test phrase {friends_deaths}'
+    return f'I {won_or_lost} my last game as {hero} {with_friends} {insult_friend}. I had {gold_per_minute} GPM -- Test phrase {friends_deaths}' #and {deaths} deaths.' #
 
 
 def get_last_match_data() -> LastGameState:
