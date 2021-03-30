@@ -182,7 +182,7 @@ def generate_old_game_notification(last_game_state: LastGameState) -> str:
         print(x)
         if int(friends_deaths[x]) > previous_value:
             previous_value = int(friends_deaths[x])
-            most_deaths = friends_deaths[x-1] + ' had an impressive ' + previous_value + ' deaths. Oof'
+            most_deaths = str(friends_deaths[x-1]) + ' had an impressive ' + str(previous_value) + ' deaths. Oof'
         x = x+2
         print("end of loop")
         print(x)
