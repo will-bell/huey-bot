@@ -183,6 +183,7 @@ def generate_old_game_notification(last_game_state: LastGameState) -> str:
             previous_value = friends_deaths[x+1]
             most_deaths = friends_deaths[x] + ' had an impressive ' + previous_value + ' deaths. Oof'
         x = x+2
+        print(x)
 
 
     if len(last_game_state.with_friends) == 1:
