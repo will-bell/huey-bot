@@ -178,12 +178,13 @@ def generate_old_game_notification(last_game_state: LastGameState) -> str:
     #determines who had the highest number of deaths and insults them
 
     while x <= (death_length):
-        print(x + 'beginning of loop')
+        print(x + "beginning of loop")
         if int(friends_deaths[x]) > previous_value:
             previous_value = int(friends_deaths[x-1])
             most_deaths = friends_deaths[x] + ' had an impressive ' + previous_value + ' deaths. Oof'
         x = x+2
-        print(x + 'end of loop')
+        print(x + "end of loop")
+        
 
 
     if len(last_game_state.with_friends) == 1:
