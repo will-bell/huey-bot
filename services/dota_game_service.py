@@ -171,7 +171,7 @@ def generate_old_game_notification(last_game_state: LastGameState) -> str:
     death_length = len(friends_deaths)
     most_deaths = ''
     previous_value = 0
-    x = 0
+    x = 1
 
     print(friends_deaths)
 
