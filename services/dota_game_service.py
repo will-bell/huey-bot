@@ -88,7 +88,7 @@ def make_last_game_state_args(match_data: dict) -> tuple:
     for entry in match_data['players']:
 
         # Look for teammates
-        if entry['isRadiant'] and player_is_radiant:
+        if entry['isRadiant'] == player_is_radiant:
             # Add teammates' heroes' names to the list
             with_heroes.append(HERO_MAP[entry['hero_id']]['localized_name'])
             
@@ -197,6 +197,9 @@ def dota_game_service(last_game_state: LastGameState):
 
                         # Post to the group chat
                         send_message(generate_game_notification(last_game_state))
+
+                    else:
+                        last_game_state.last_query_time = time.time()
 
                 except:
                     pass
