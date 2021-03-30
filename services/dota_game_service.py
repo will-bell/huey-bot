@@ -172,6 +172,8 @@ def generate_old_game_notification(last_game_state: LastGameState) -> str:
     previous_value = 0
     x = 0
 
+    friends_deaths[2] = '69'
+
     #determines who had the highest number of deaths and insults them
 
     while x < (death_length / 2):
