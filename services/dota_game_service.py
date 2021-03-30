@@ -69,7 +69,7 @@ def make_last_game_state_args(match_data: dict) -> tuple:
         if entry['account_id']:
             if int(entry['account_id']) in (PLAYER_ID, 120813182, 106692261, 12984717, 95549436, 133187493, 55335864, 126859835):
                 if int(entry['account_id']) == PLAYER_ID:
-                    friends_deaths.append('Houston')
+                    friends_deaths.append("Houston")
                     friends_deaths.append(int(entry['deaths']))
                 else:
                     friends_deaths.append(FRIENDS_MAP[entry['account_id']])
@@ -179,7 +179,7 @@ def generate_old_game_notification(last_game_state: LastGameState) -> str:
         with_friends = f'with {last_game_state.with_friends[0]} and {last_game_state.with_friends[1]}'
         insult_friend = f'. {choice(last_game_state.with_friends)} tried their best but oof'
 
-    return f'I {won_or_lost} my last game as {hero} {with_friends} {insult_friend}. I had {gold_per_minute} GPM -- Test phrase {friends_deaths}' #and {deaths} deaths.' #
+    return f'I {won_or_lost} my last game as {hero} {with_friends} {insult_friend}. I had {gold_per_minute} GPM -- Test phrase {friends_deaths}'
 
 
 def get_last_match_data() -> LastGameState:
