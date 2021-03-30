@@ -231,6 +231,9 @@ def dota_game_service(last_game_state: LastGameState):
                         # Post to the group chat
                         send_message(generate_game_notification(last_game_state))
 
+                    else:
+                        last_game_state.last_query_time = time.time()
+
                 except:
                     pass
 
