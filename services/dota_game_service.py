@@ -166,6 +166,10 @@ def generate_old_game_notification(last_game_state: LastGameState) -> str:
     insult_friend = ''
     gold_per_minute = last_game_state.houstons_GPM
     friends_deaths = last_game_state.friends_deaths
+
+    death_length = len(friends_deaths) 
+    print(death_length)
+
     if len(last_game_state.with_friends) == 1:
         with_friends = 'with ' + last_game_state.with_friends[0]
         insult_friend = f'. {last_game_state.with_friends[0]} tried their best but oof'
