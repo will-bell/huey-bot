@@ -168,7 +168,10 @@ def generate_old_game_notification(last_game_state: LastGameState) -> str:
     friends_deaths = last_game_state.friends_deaths
 
     death_length = len(friends_deaths) 
-    print(death_length)
+    #print(death_length)
+
+    for value in friends_deaths:
+        print(value)    
 
     if len(last_game_state.with_friends) == 1:
         with_friends = 'with ' + last_game_state.with_friends[0]
