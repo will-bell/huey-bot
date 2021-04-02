@@ -1,9 +1,7 @@
 NAMES = [
-    'houston',
     'huey',
-    '@houston',
-    '@houston holsenback',
-    '@huey',
+    'houston',
+    'houston holsenback',
     'hoss'
 ]
 
@@ -11,6 +9,7 @@ GREETINGS = [
     'oi',   
     'hey',
     'hello'
+    '@'
 ]
 
 REQUESTS = [
