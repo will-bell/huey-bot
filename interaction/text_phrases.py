@@ -30,7 +30,7 @@ negatives = [
     "Maybe later, first I have to",
     "Hold up I just gotta",
     "20 mins, gotta",
-    "Play one -",
+    "Play one - finna",
     "Go ahead and play one, I need to",
     "Not tonight, need to"
 ]
