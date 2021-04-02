@@ -1,7 +1,7 @@
 from random import choice
 from typing import List
 
-from .text_phrases import EXTRA, GREETINGS, NAMES, NEGATIVES, REASONS, REQUESTS
+from .text_phrases import EXTRA, GREETINGS, NAMES, NEGATIVES, REASONS, REQUESTS, WHAT
 
 
 def detect(text: str, options: List[str]) -> bool:
@@ -61,3 +61,7 @@ def question_about_friends_online(data: dict) -> bool:
     lower_text = data['text'].lower()
 
     return sum_markers(lower_text, FRIENDS_ONLINE_MARKERS) > 1
+
+
+def no_prompt():
+    return choice(WHAT)

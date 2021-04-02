@@ -120,3 +120,10 @@ EXTRA = [
 ]
 
 EXTRA = EXTRA + [' ' for _ in range(len(EXTRA))]
+
+WHAT = [
+    "yo",
+    "what?",
+    "huh?",
+    "sup"
+]
