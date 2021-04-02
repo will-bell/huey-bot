@@ -4,7 +4,9 @@ names = [
     '@houston',
     '@houston holsenback',
     '@huey',
-    'hoss daddy'
+    'hoss daddy',
+    'big hoss',
+    'hoss'
 ]
 
 greetings = [
