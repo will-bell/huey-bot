@@ -1,7 +1,8 @@
 from random import choice
 from typing import List
 
-from .text_phrases import EXTRA, GREETINGS, NAMES, NEGATIVES, REASONS, REQUESTS, WHAT
+from .text_phrases import (EXTRA, GREETINGS, NAMES, NEGATIVES, REASONS,
+                           REQUESTS, WHAT)
 
 
 def detect(text: str, options: List[str]) -> bool:
@@ -15,7 +16,7 @@ def detect(text: str, options: List[str]) -> bool:
 def oi_huey(data) -> bool:
     lower_text = data['text'].lower()
     if detect(lower_text, NAMES):
-        if detect(lower_text, GREETINGS):
+        if detect(lower_text, GREETINGS) or detect(lower_text, '@'):
             return True
 
     return False
