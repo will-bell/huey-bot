@@ -5,7 +5,6 @@ import requests
 
 HOUSTON_STEAM64 = '76561198057018373'
 
-
 FRIENDS_MAP_64 = {
     '76561198081078910': 'Gavin',
     '76561198066957989': 'Blake',
@@ -29,14 +28,16 @@ def get_friends_online() -> List[str]:
     data = response.json()['response']['players']
 
     friends_online = []
+    houston_online = False
     for entry in data:
         if entry['personastate'] == 1:
-            friends_online.append(FRIENDS_MAP_64[entry['steamid']])
+            if entry['steamid'] == HOUSTON_STEAM64:
+                houston_online = True
+            else:
+                friends_online.append(FRIENDS_MAP_64[entry['steamid']])
 
-    for entry in data:
-        if entry['steamid'] == HOUSTON_STEAM64:
-            if entry['personastate'] == 1:
-                friends_online.append('I')
+    if houston_online:
+        friends_online.append('I')
 
     return friends_online
 
