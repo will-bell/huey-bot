@@ -54,7 +54,7 @@ def question_about_last_game(data: dict) -> bool:
     return marker_sum > 3
 
 
-FRIENDS_ONLINE_MARKERS = ["who's", "who is", "is anyone", "online", "playing"]
+FRIENDS_ONLINE_MARKERS = ["who's", "who is", "is anyone", "online", "playing", "on"]
 
 
 def question_about_friends_online(data: dict) -> bool:
