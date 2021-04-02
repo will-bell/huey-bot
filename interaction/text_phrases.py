@@ -2,7 +2,9 @@ NAMES = [
     'huey',
     'houston',
     'houston holsenback',
-    'hoss'
+    'hoss',
+    'hoss daddy',
+    'big hoss'
 ]
 
 GREETINGS = [
@@ -27,10 +29,14 @@ REQUESTS = [
 
 NEGATIVES = [
     "Be on in 40 I gotta",
-    "Play without me I have to",
-    "Sorry guys I can't I gotta",
-    "Maybe later first I have to",
-    "Hold up I just gotta"
+    "Play without me, I have to",
+    "Sorry guys I can't, I gotta",
+    "Maybe later, first I have to",
+    "Hold up I just gotta",
+    "20 mins, gotta",
+    "Play one - finna",
+    "Go ahead and play one, I need to",
+    "Not tonight, need to"
 ]
 
 REASONS = [
