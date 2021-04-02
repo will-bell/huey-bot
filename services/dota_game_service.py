@@ -58,6 +58,7 @@ class LastGameState(NamedTuple):
     friends_deaths: str
 
 
+
 def make_last_game_state_args(match_data: dict) -> tuple:
     # Fill out the match data fields
     match_id = match_data['match_id']
@@ -94,6 +95,7 @@ def make_last_game_state_args(match_data: dict) -> tuple:
     assists = player_data['assists']
     player_gpm = player_data['gold_per_min']
     gold_per_min = player_data['gold_per_min']
+
 
     # Find heroes on either side and friends
     with_heroes = []
@@ -166,6 +168,10 @@ def generate_old_game_notification(last_game_state: LastGameState) -> str:
     insult_friend = ''
     gold_per_minute = last_game_state.houstons_GPM
     friends_deaths = last_game_state.friends_deaths
+    kills = last_game_state.kills
+    deaths = last_game_state.deaths
+    assists = last_game_state.assists
+
 
     death_length = len(friends_deaths)
     most_deaths = ''
@@ -176,7 +182,7 @@ def generate_old_game_notification(last_game_state: LastGameState) -> str:
     while x <= (death_length):
         if int(friends_deaths[x]) > previous_value:
             previous_value = int(friends_deaths[x])
-            most_deaths = str(friends_deaths[x-1]) + ' had an impressive ' + str(previous_value) + ' deaths. Oof'
+            most_deaths = str(friends_deaths[x-1]) + ' had the most deaths with ' + str(previous_value) + ' deaths. Oof'
         x = x+2
         
 
@@ -193,7 +199,7 @@ def generate_old_game_notification(last_game_state: LastGameState) -> str:
         with_friends = f' with {last_game_state.with_friends[0]} and {last_game_state.with_friends[1]}'
         #insult_friend = f'. {choice(last_game_state.with_friends)} tried their best but oof'
 
-    return f'I {won_or_lost} my last game as {hero}{with_friends}. {most_deaths}.'
+    return f'I {won_or_lost} my last game as {hero}{with_friends}. My KDA was {kills}/{deaths}/{assists}. {most_deaths}.'
     # return f'I {won_or_lost} my last game as {hero} {with_friends} {insult_friend}. I had {gold_per_minute} GPM -- Test phrase {friends_deaths}'
 
 
