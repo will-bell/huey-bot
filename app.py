@@ -1,5 +1,6 @@
+import logging
 import time
-from multiprocessing import Manager, Process
+from multiprocessing import Manager, Process, Value
 
 from flask import Flask, request
 from flask_sqlalchemy import SQLAlchemy
@@ -11,8 +12,14 @@ from interaction.conversation import (generate_excuse, oi_huey,
 from services.dota_game_service import (dota_game_service,
                                         generate_old_game_notification,
                                         get_last_match_data)
+from services.keep_alive_service import keep_alive
 
 app = Flask(__name__)
+
+if __name__ == '__main__':
+    gunicorn_logger = logging.getLogger('gunicorn.error')
+    app.logger.handlers = gunicorn_logger.handlers
+    app.logger.setLevel(gunicorn_logger.level)
 
 # db_name = 'last_game_state.db'
 # app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///' + db_name
@@ -39,18 +46,27 @@ app = Flask(__name__)
 
 @app.route('/', methods=['POST'])
 def webhook():
+    app.logger.debug('Got a message!')
+
     # Comfortable amount of time to not cause a graphical glitch in GroupMe
     time.sleep(1)
 
     data = request.get_json()
 
-    if data['name'] != 'Huey':
+    if data['name'] != 'Test Bot':
+
         if oi_huey(data):
             send_message(generate_excuse())
 
         elif question_about_last_game(data):
             send_message(generate_old_game_notification(get_last_match_data()))
+        
+    return "ok", 200
 
+
+@app.route('/keep_alive', methods=['POST'])
+def keep_alive_webhook():
+    app.logger.debug('Keep alive route received a ping')
     return "ok", 200
 
 
@@ -70,8 +86,17 @@ if __name__ == '__main__':
     last_game_state.with_heroes = tuple()
     last_game_state.with_friends = tuple()
     last_game_state.against_heroes = tuple()
+    last_game_state.houstons_GPM = -1
+    last_game_state.friends_deaths = ''
 
     p = Process(target=dota_game_service, args=(last_game_state,))
-    p.start()  
+    p.start()
+
+    value = Value('b', True)
+    p2 = Process(target=keep_alive, args=(value,))
+    p2.start()
+
     app.run(debug=True, use_reloader=False)
+    
     p.join()
+    p2.join()
