@@ -1,10 +1,12 @@
-import requests
-from typing import List
 import os
+from typing import List
+
+import requests
+
+HOUSTON_STEAM64 = '76561198057018373'
 
 
 FRIENDS_MAP_64 = {
-    '76561198057018373': 'Houston',
     '76561198081078910': 'Gavin',
     '76561198066957989': 'Blake',
     '76561198073250445': 'Grady',
@@ -15,7 +17,7 @@ FRIENDS_MAP_64 = {
 }
 
 STEAM_API_KEY = os.getenv('STEAM_API_KEY')
-STEAM64_ID_LIST = ','.join(list(FRIENDS_MAP_64.keys()))
+STEAM64_ID_LIST = ','.join(list(FRIENDS_MAP_64.keys()) + [HOUSTON_STEAM64])
 
 STEAM_API_URL = 'http://api.steampowered.com/ISteamUser/GetPlayerSummaries/v0002/'
 STEAM_API_PARAMS = {'key': STEAM_API_KEY, 'steamids': STEAM64_ID_LIST}
@@ -31,6 +33,11 @@ def get_friends_online() -> List[str]:
         if entry['personastate'] == 1:
             friends_online.append(FRIENDS_MAP_64[entry['steamid']])
 
+    for entry in data:
+        if entry['steamid'] == HOUSTON_STEAM64:
+            if entry['personastate'] == 1:
+                friends_online.append('I')
+
     return friends_online
 
 
@@ -42,7 +49,7 @@ def generate_friends_online_message() -> str:
 
     if len(friends_online) > 2:
         friend_list = list(friends_online[:-1]) + ['and ' + friends_online[-1]]
-        friends_string = ','.join(friend_list)
+        friends_string = ', '.join(friend_list)
         return f"{friends_string} are online"
 
     if len(friends_online) == 2:
