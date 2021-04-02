@@ -28,7 +28,7 @@ def get_friends_online() -> List[str]:
 
     friends_online = []
     for entry in data:
-        if entry['personastate'] > 0:
+        if entry['personastate'] == 1:
             friends_online.append(FRIENDS_MAP_64[entry['steamid']])
 
     return friends_online
@@ -42,7 +42,8 @@ def generate_friends_online_message() -> str:
 
     if len(friends_online) > 2:
         friend_list = list(friends_online[:-1]) + ['and ' + friends_online[-1]]
-        return f'{friend_list} are online'
+        friends_string = ','.join(friend_list)
+        return f"{friends_string} are online"
 
     if len(friends_online) == 2:
         return f'{friends_online[0]} and {friends_online[1]} are online'
