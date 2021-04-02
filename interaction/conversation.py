@@ -1,7 +1,7 @@
 from random import choice
 from typing import List
 
-from .text_phrases import extra, greetings, names, negatives, reasons
+from .text_phrases import EXTRA, GREETINGS, NAMES, NEGATIVES, REASONS, REQUESTS
 
 
 def detect(text: str, options: List[str]) -> bool:
@@ -14,26 +14,50 @@ def detect(text: str, options: List[str]) -> bool:
 
 def oi_huey(data) -> bool:
     lower_text = data['text'].lower()
-    if detect(lower_text, names):
-        if detect(lower_text, greetings):
+    if detect(lower_text, NAMES):
+        if detect(lower_text, GREETINGS):
             return True
 
     return False
 
 
+def request_to_do_something(data: dict) -> bool:
+    lower_text = data['text'].lower()
+    
+    if detect(lower_text, REQUESTS):
+        return True
+
+    return False
+
+
+def generate_excuse() -> str:
+    return choice(NEGATIVES) + ' ' + choice(REASONS) + ' ' + choice(EXTRA)
+
+
+def sum_markers(text: str, markers: List[str]) -> int:
+    marker_sum = 0
+    for marker in markers:
+        if marker in text:
+            marker_sum += 1
+
+    return marker_sum
+
+
 LAST_GAME_MARKERS = ["how", "how'd", 'that', 'last', 'game', 'was', 'it', 'go']
 
 
-def question_about_last_game(data) -> bool:
+def question_about_last_game(data: dict) -> bool:
     lower_text = data['text'].lower()
 
-    marker_sum = 0
-    for marker in LAST_GAME_MARKERS:
-        if marker in lower_text:
-            marker_sum += 1
+    marker_sum = sum_markers(lower_text, LAST_GAME_MARKERS)
     
     return marker_sum > 3
 
 
-def generate_excuse() -> str:
-    return choice(negatives) + ' ' + choice(reasons) + ' ' + choice(extra)
+FRIENDS_ONLINE_MARKERS = ["who's", "who is", "is anyone", "online", "playing"]
+
+
+def question_about_friends_online(data: dict) -> bool:
+    lower_text = data['text'].lower()
+
+    return sum_markers(lower_text, FRIENDS_ONLINE_MARKERS) > 1

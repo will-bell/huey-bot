@@ -1,4 +1,5 @@
 import logging
+from services.steam_service import generate_friends_online_message
 import time
 from multiprocessing import Manager, Process, Value
 
@@ -7,8 +8,8 @@ from flask_sqlalchemy import SQLAlchemy
 from sqlalchemy.sql import text
 
 from common import send_message
-from interaction.conversation import (generate_excuse, oi_huey,
-                                      question_about_last_game)
+from interaction.conversation import (generate_excuse, oi_huey, question_about_friends_online,
+                                      question_about_last_game, request_to_do_something)
 from services.dota_game_service import (dota_game_service,
                                         generate_old_game_notification,
                                         get_last_match_data)
@@ -55,10 +56,14 @@ def webhook():
 
     if data['name'] != 'Huey':
         if oi_huey(data):
-            send_message(generate_excuse())
+            if question_about_last_game(data):
+                send_message(generate_old_game_notification(get_last_match_data()))
 
-        elif question_about_last_game(data):
-            send_message(generate_old_game_notification(get_last_match_data()))
+            elif question_about_friends_online(data):
+                send_message(generate_friends_online_message())
+
+            elif request_to_do_something(data):
+                send_message(generate_excuse())
         
     return "ok", 200
 

@@ -1,4 +1,4 @@
-names = [
+NAMES = [
     'houston',
     'huey',
     '@houston',
@@ -7,8 +7,13 @@ names = [
     'hoss'
 ]
 
-greetings = [
-    'oi',
+GREETINGS = [
+    'oi',   
+    'hey',
+    'hello'
+]
+
+REQUESTS = [
     'where you at',
     'where are you',
     'play dota',
@@ -18,10 +23,10 @@ greetings = [
     'dota?',
     'war thunder?', 
     'wya',
-    'get on'
+    'get on',
 ]
 
-negatives = [
+NEGATIVES = [
     "Be on in 40 I gotta",
     "Play without me I have to",
     "Sorry guys I can't I gotta",
@@ -29,7 +34,7 @@ negatives = [
     "Hold up I just gotta"
 ]
 
-reasons = [
+REASONS = [
     "tie my mom's shoes tighter",
     "do my dad's taxes",
     "move scrap metal",
@@ -107,11 +112,11 @@ reasons = [
     "blow on my sister's soup"
 ]
 
-extra = [
+EXTRA = [
     "shouldn't take too long",
     "be on after that",
     "don't worry about it",
     "so that's a negative ghost-rider"
 ]
 
-extra = extra + [' ' for _ in range(len(extra))]
+EXTRA = EXTRA + [' ' for _ in range(len(EXTRA))]
