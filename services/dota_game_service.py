@@ -165,7 +165,7 @@ def generate_old_game_notification(last_game_state: LastGameState) -> str:
     friends_deaths = last_game_state.friends_deaths
     high_score = -1
     feeder = ''
-    for friend, deaths in zip(friends_deaths.items()):
+    for friend, deaths in friends_deaths.items():
         if deaths > high_score:
             feeder = friend
             high_score = deaths
