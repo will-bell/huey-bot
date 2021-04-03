@@ -132,3 +132,21 @@ WHAT = [
     "huh?",
     "sup"
 ]
+
+TONY_NICKNAMES = [
+    "pipsqueak",
+    "little guy",
+    "lil' shrimp boy",
+    "squirt",
+    "small fry",
+    "runt of the litter",
+    "short stuff",
+    "big Huey"
+]
+
+TONY_PHRASES = [
+    "pipe down",
+    "hush now",
+    "calm down",
+    "good one"
+]
