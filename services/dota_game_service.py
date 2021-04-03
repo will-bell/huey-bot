@@ -1,7 +1,6 @@
 import os
 import time
-from random import choice
-from typing import Dict, NamedTuple, Tuple
+from typing import NamedTuple, Tuple, Dict
 
 import requests
 from common import send_message
@@ -30,6 +29,9 @@ FRIENDS_MAP = {
     126859835: 'Tony'
 }
 
+FRIENDS_ID_LIST = list(FRIENDS_MAP.keys())
+ALL_ID_LIST = [PLAYER_ID] + FRIENDS_ID_LIST
+
 
 class LastGameState(NamedTuple):
     # For not pinging the website too often
@@ -41,7 +43,7 @@ class LastGameState(NamedTuple):
     side: str
     victory: bool
     duration: int
-    
+
     # Player data
     hero: str
     kills: int
@@ -55,8 +57,7 @@ class LastGameState(NamedTuple):
     # Enemies
     against_heroes: Tuple[str]
     houstons_GPM: int
-    friends_deaths: str
-
+    friends_deaths: Dict[str, int]
 
 
 def make_last_game_state_args(match_data: dict) -> tuple:
@@ -64,43 +65,32 @@ def make_last_game_state_args(match_data: dict) -> tuple:
     match_id = match_data['match_id']
     start_time = match_data['start_time']
 
-    #stores houston's and friends' death count in a list
-    friends_deaths = []
-    for entry in match_data['players']:
-        if entry['account_id']:
-            if int(entry['account_id']) in (PLAYER_ID, 120813182, 106692261, 12984717, 95549436, 133187493, 55335864, 126859835):
-                if int(entry['account_id']) == PLAYER_ID:
-                    friends_deaths.append("I")
-                    friends_deaths.append(str(int(entry['deaths'])))
-                else:
-                    friends_deaths.append(FRIENDS_MAP[entry['account_id']])
-                    friends_deaths.append(str(int(entry['deaths'])))
-
-
     player_data = None
     for entry in match_data['players']:
         if entry['account_id']:
             if int(entry['account_id']) == PLAYER_ID:
                 player_data = entry
                 break
-    
+
     side = 'Radiant' if player_data['isRadiant'] else 'Dire'
     victory = bool(player_data['win'])
     duration = int(player_data['duration'] / 60)
-    
-    # Fill out the player data fields for houston
+
+    # Fill out the player data fields for Houston
     hero = HERO_MAP[player_data['hero_id']]['localized_name']
     kills = player_data['kills']
     deaths = player_data['deaths']
     assists = player_data['assists']
     player_gpm = player_data['gold_per_min']
-    gold_per_min = player_data['gold_per_min']
-
 
     # Find heroes on either side and friends
     with_heroes = []
     against_heroes = []
     with_friends = []
+
+    # Keep track of friends' deaths
+    friends_deaths = {}
+
     player_is_radiant = player_data['isRadiant']
     for entry in match_data['players']:
 
@@ -108,27 +98,32 @@ def make_last_game_state_args(match_data: dict) -> tuple:
         if entry['isRadiant'] == player_is_radiant:
             # Add teammates' heroes' names to the list
             with_heroes.append(HERO_MAP[entry['hero_id']]['localized_name'])
-            
+
             # If the teammate is in the friends list, add it to the list of friends played with
             if entry['account_id'] in FRIENDS_MAP.keys():
-                with_friends.append(FRIENDS_MAP[entry['account_id']])
-        
+                friend = FRIENDS_MAP[entry['account_id']]
+                with_friends.append(friend)
+
+                # Also get the number of deaths for fun later
+                friends_deaths[friend] = entry['deaths']
+
         # Look for enemies
         else:
             # Add enemies' heroes' names to the list
             against_heroes.append(HERO_MAP[entry['hero_id']]['localized_name'])
-    
+
     with_heroes = tuple(with_heroes)
     with_friends = tuple(with_friends)
     against_heroes = tuple(against_heroes)
     friends_deaths = tuple(friends_deaths)
 
-    return time.time(), match_id, start_time, side, victory, duration, hero, kills, deaths, assists, with_heroes, with_friends, against_heroes, player_gpm, friends_deaths
+    return time.time(), match_id, start_time, side, victory, duration, hero, kills, deaths, assists, with_heroes, \
+        with_friends, against_heroes, player_gpm, friends_deaths
 
 
 def update_last_game_state(last_game_state: LastGameState, match_data: dict):
-    last_query_time, match_id, start_time, side, victory, duration, hero, kills, deaths, assists, with_heroes, with_friends, against_heroes, player_gpm, friends_deaths  = \
-        make_last_game_state_args(match_data)
+    last_query_time, match_id, start_time, side, victory, duration, hero, kills, deaths, assists, with_heroes, \
+        with_friends, against_heroes, player_gpm, friends_deaths = make_last_game_state_args(match_data)
 
     last_game_state.last_query_time = last_query_time
     last_game_state.match_id = match_id
@@ -163,49 +158,44 @@ def generate_player_gpm(last_game_state: LastGameState) -> str:
 def generate_old_game_notification(last_game_state: LastGameState) -> str:
     hero = last_game_state.hero
     won_or_lost = 'won' if last_game_state.victory else 'lost'
-    
-    with_friends = ''
-    insult_friend = ''
-    gold_per_minute = last_game_state.houstons_GPM
-    friends_deaths = last_game_state.friends_deaths
+
     kills = last_game_state.kills
     deaths = last_game_state.deaths
     assists = last_game_state.assists
 
+    friends_deaths = last_game_state.friends_deaths
+    high_score = -1
+    feeder = ''
+    for friend, deaths in zip(friends_deaths.items()):
+        if deaths > high_score:
+            feeder = friend
+            high_score = deaths
 
-    death_length = len(friends_deaths)
-    most_deaths = ''
-    previous_value = 0
-    x = 1
+    if deaths > high_score:
+        feeder = 'I'
+        high_score = deaths
 
-    #determines who had the highest number of deaths and insults them
-    while x <= (death_length):
-        if int(friends_deaths[x]) > previous_value:
-            previous_value = int(friends_deaths[x])
-            most_deaths = str(friends_deaths[x-1]) + ' had the most deaths with ' + str(previous_value) + ' deaths. Oof'
-        x = x+2
-        
+    most_deaths = f"{feeder} had the most deaths with {high_score} deaths. Oof"
 
+    with_friends = ''
     if len(last_game_state.with_friends) == 1:
-        with_friends = ' with ' + last_game_state.with_friends[0]
-        #insult_friend = f'. {last_game_state.with_friends[0]} tried their best but oof'
+        with_friends = f' with {last_game_state.with_friends[0]}'
 
     elif len(last_game_state.with_friends) > 2:
         friend_list = list(last_game_state.with_friends[:-1]) + ['and ' + last_game_state.with_friends[-1]]
         with_friends = ' with ' + ', '.join(friend_list)
-        #insult_friend = f'. {choice(last_game_state.with_friends)} tried their best but oof'
 
     elif len(last_game_state.with_friends) == 2:
         with_friends = f' with {last_game_state.with_friends[0]} and {last_game_state.with_friends[1]}'
-        #insult_friend = f'. {choice(last_game_state.with_friends)} tried their best but oof'
 
-    return f'I {won_or_lost} my last game as {hero}{with_friends}. My KDA was {kills}/{deaths}/{assists}. {most_deaths}.'
-    # return f'I {won_or_lost} my last game as {hero} {with_friends} {insult_friend}. I had {gold_per_minute} GPM -- Test phrase {friends_deaths}'
+    return \
+        f'I {won_or_lost} my last game as {hero}{with_friends}. My KDA was {kills}/{deaths}/{assists}. {most_deaths}.'
 
 
 def get_last_match_data() -> LastGameState:
     # Refresh the player's match data on OpenDota.com
-    refresh_response = requests.post(url=PLAYER_REFRESH_URL)
+    _ = requests.post(url=PLAYER_REFRESH_URL)
+    time.sleep(.2)
 
     # Get the latest match data
     match_id = requests.get(url=PLAYER_MATCHES_URL, params={'limit': 1}).json()[0]['match_id']
@@ -216,18 +206,18 @@ def get_last_match_data() -> LastGameState:
 
 def dota_game_service(last_game_state: LastGameState):
     while True:
-        if time.time() - last_game_state.last_query_time >= 10.:
-            
-            # TODO: REMOVE THIS
-            print('time to check')
-
+        if time.time() - last_game_state.last_query_time >= 60.:
             if last_game_state.match_id > 0:
-                try:
-                    # Refresh the player's match data on OpenDota.com
-                    refresh_response = requests.post(url=PLAYER_REFRESH_URL)
+                # Refresh the player's match data on OpenDota.com
+                _ = requests.post(url=PLAYER_REFRESH_URL)
 
-                    # Get the latest match data
-                    match_id = requests.get(url=PLAYER_MATCHES_URL, params={'limit': 1}).json()[0]['match_id']
+                time.sleep(.2)
+
+                # Get the latest match data
+                response = requests.get(url=PLAYER_MATCHES_URL, params={'limit': 1})
+
+                if response.status_code == 200:
+                    match_id = response.json()[0]['match_id']
 
                     if match_id != last_game_state.match_id:
                         match_data = requests.get(url=MATCHES_URL + str(match_id)).json()
@@ -241,16 +231,15 @@ def dota_game_service(last_game_state: LastGameState):
                     else:
                         last_game_state.last_query_time = time.time()
 
-                except:
-                    pass
-
             else:
                 # Get the latest match data
-                match_id = requests.get(url=PLAYER_MATCHES_URL, params={'limit': 1}).json()[0]['match_id']
-                print(f'Last match id: {match_id}')
+                response = requests.get(url=PLAYER_MATCHES_URL, params={'limit': 1})
 
-                # Get the latest match data
-                match_data = requests.get(url=MATCHES_URL + str(match_id)).json()
+                if response.status_code == 200:
+                    match_id = response.json()[0]['match_id']
 
-                # Give the last game state its data
-                update_last_game_state(last_game_state, match_data)
+                    # Get the latest match data
+                    match_data = requests.get(url=MATCHES_URL + str(match_id)).json()
+
+                    # Give the last game state its data
+                    update_last_game_state(last_game_state, match_data)
