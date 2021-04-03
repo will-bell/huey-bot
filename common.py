@@ -18,9 +18,6 @@ def send_message(msg):
 
 def send_message_tony(msg):
     if msg is not None:
-        
-        time.sleep(3)
-
         url = 'https://api.groupme.com/v3/bots/post'
 
         data = {
