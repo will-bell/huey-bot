@@ -2,7 +2,6 @@ import os
 
 import requests
 
-from random import random
 
 
 def send_message(msg):

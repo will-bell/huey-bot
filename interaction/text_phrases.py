@@ -136,7 +136,7 @@ WHAT = [
 TONY_NICKNAMES = [
     "pipsqueak",
     "little guy",
-    "lil' shrimp boy",
+    "lil' shrimpy boy",
     "squirt",
     "small fry",
     "runt of the litter",
@@ -148,5 +148,7 @@ TONY_PHRASES = [
     "pipe down",
     "hush now",
     "calm down",
-    "good one"
+    "good one",
+    "simmer down",
+    "steady on"
 ]

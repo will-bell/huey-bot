@@ -1,4 +1,4 @@
-from random import choice, random
+from random import choice, random, randint
 from typing import List
 
 from .text_phrases import (EXTRA, GREETINGS, NAMES, NEGATIVES, REASONS,
@@ -69,7 +69,7 @@ def no_prompt():
 
 def tony_response():
     if random() <= 0.35:
-        time.sleep(10)
+        time.sleep(randint(3,11))
         return choice(TONY_PHRASES) + ' ' + choice(TONY_NICKNAMES)
     else:
         return None

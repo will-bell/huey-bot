@@ -60,8 +60,7 @@ def webhook():
         if oi_huey(data):
             if question_about_last_game(data):
                 send_message(generate_old_game_notification(get_last_match_data()))
-
-                
+                send_message_tony(tony_response())
             elif question_about_friends_online(data):
                 send_message(generate_friends_online_message())
             elif request_to_do_something(data):
