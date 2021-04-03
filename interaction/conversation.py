@@ -68,7 +68,8 @@ def no_prompt():
     return choice(WHAT)
 
 def tony_response():
-    if random() <= 0.5:
+    if random() <= 0.35:
+        time.sleep(10)
         return choice(TONY_PHRASES) + ' ' + choice(TONY_NICKNAMES)
     else:
         return None

@@ -66,7 +66,6 @@ def webhook():
                 send_message(generate_friends_online_message())
             elif request_to_do_something(data):
                 send_message(generate_excuse())
-                time.sleep(5)
                 send_message_tony(tony_response())
 
             else:
