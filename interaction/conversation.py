@@ -1,5 +1,6 @@
 from random import choice, random, randint
 from typing import List
+import time
 
 from .text_phrases import (EXTRA, GREETINGS, NAMES, NEGATIVES, REASONS,
                            REQUESTS, WHAT, TONY_NICKNAMES, TONY_PHRASES)
