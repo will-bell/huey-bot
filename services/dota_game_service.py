@@ -115,7 +115,6 @@ def make_last_game_state_args(match_data: dict) -> tuple:
     with_heroes = tuple(with_heroes)
     with_friends = tuple(with_friends)
     against_heroes = tuple(against_heroes)
-    friends_deaths = tuple(friends_deaths)
 
     return time.time(), match_id, start_time, side, victory, duration, hero, kills, deaths, assists, with_heroes, \
         with_friends, against_heroes, player_gpm, friends_deaths
