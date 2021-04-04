@@ -1,23 +1,18 @@
-import logging
 import time
 
 from flask import Flask, request
 
 from common import send_message, send_message_tony
+from dota_game_service import (generate_old_game_notification,
+                               get_last_match_data)
 from interaction.conversation import (generate_excuse, no_prompt, oi_huey,
                                       question_about_friends_online,
                                       question_about_last_game,
                                       request_to_do_something, tony_response)
-from services.dota_game_service import (generate_old_game_notification,
-                                        get_last_match_data)
-from services.steam_service import generate_friends_online_message
+from post_service import post_queue
+from steam_service import generate_friends_online_message
 
 app = Flask(__name__)
-
-if __name__ == '__main__':
-    gunicorn_logger = logging.getLogger('gunicorn.error')
-    app.logger.handlers = gunicorn_logger.handlers
-    app.logger.setLevel(gunicorn_logger.level)
 
 
 @app.route('/', methods=['POST'])
@@ -51,7 +46,7 @@ def webhook():
 
 @app.route('/keep_alive', methods=['POST'])
 def keep_alive_webhook():
-    app.logger.debug('Keep alive route received a ping')
+    post_queue.enqueue('Pong')
     return "ok", 200
 
 

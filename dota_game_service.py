@@ -3,6 +3,7 @@ import time
 from typing import NamedTuple, Tuple, Dict
 
 import requests
+
 from common import send_message
 
 API_URL = "https://api.opendota.com/api/"
@@ -146,12 +147,6 @@ def generate_game_notification(last_game_state: LastGameState) -> str:
     won_or_lost = 'won' if last_game_state.victory else 'lost'
 
     return f'Just {won_or_lost} a game as {hero}'
-
-
-def generate_player_gpm(last_game_state: LastGameState) -> str:
-    player_gpm = last_game_state.houstons_GPM
-
-    return str(player_gpm)
 
 
 def generate_old_game_notification(last_game_state: LastGameState) -> str:

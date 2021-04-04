@@ -1,1 +1,3 @@
-web: gunicorn --workers=2 --log-level=debug app:app
+web: gunicorn
+app: app
+worker: python worker.py
