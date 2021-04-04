@@ -50,7 +50,7 @@ def get_friends_online() -> List[str]:
     friends_online = []
     houston_online = False
     for entry in data:
-        if entry['profilestate'] == 1:
+        if entry['personastate'] == 1:
             if entry['steamid'] == HOUSTON_STEAM64:
                 houston_online = True
             else:
@@ -120,7 +120,7 @@ def update_friends_online_state(state: FriendsOnlineState, announce: bool = Fals
 
             # Compare Houston's previous and current statuses
             houston_prev_state = state.Houston > 0
-            houston_curr_state = entry['profilestate'] > 0
+            houston_curr_state = entry['personastate'] > 0
             if houston_prev_state != houston_curr_state:
 
                 # If they are different, then update and send a message about the change
@@ -135,7 +135,7 @@ def update_friends_online_state(state: FriendsOnlineState, announce: bool = Fals
 
             # Compare the friend's previous and current statuses
             friend_prev_state = state.__getattribute__(friend) > 0
-            friend_curr_state = entry['profilestate'] > 0
+            friend_curr_state = entry['personastate'] > 0
             if friend_prev_state != friend_curr_state:
                 
                 # If they are different, then update and send a message about the change
