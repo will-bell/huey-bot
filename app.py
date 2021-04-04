@@ -41,11 +41,8 @@ def webhook():
     return "ok", 200
 
 
-@app.route('/keep_alive', methods=['POST'])
+@app.route('/is_alive', methods=['POST'])
 def keep_alive_webhook():
-
-    send_message('pong')
-
     return "ok", 200
 
 if __name__ == '__main__':
