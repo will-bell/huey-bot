@@ -79,7 +79,7 @@ def generate_friends_online_message() -> str:
     return f'Just {friends_online[0]} is online'
 
 
-class FriendsOnlineState(NamedTuple):
+class FriendsOnlineState:
 
     last_update_time: float
 
@@ -91,6 +91,17 @@ class FriendsOnlineState(NamedTuple):
     Steve: int
     Tony: int
     Houston: int
+
+    def __init__(self):
+        self.last_update_time = -1
+        self.Gavin = -1
+        self.Blake = -1
+        self.Grady = -1
+        self.Kevin = -1
+        self.Jake = -1
+        self.Steve = -1
+        self.Tony = -1
+        self.Houston = -1
 
 
 def update_friends_online_state(state: FriendsOnlineState, announce: bool = False):
@@ -128,7 +139,7 @@ def update_friends_online_state(state: FriendsOnlineState, announce: bool = Fals
 
 
 def online_status_service(loop: bool):
-    state = FriendsOnlineState(-1, -1, -1, -1, -1, -1, -1, -1, -1)
+    state = FriendsOnlineState()
 
     # Get the current state without announcing it
     update_friends_online_state(state, False)

@@ -43,7 +43,6 @@ def webhook():
 
 @app.route('/keep_alive', methods=['POST'])
 def keep_alive_webhook():
-    # post_queue(send_message, 'pong')
 
     send_message('pong')
 
