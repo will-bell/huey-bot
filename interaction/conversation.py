@@ -1,8 +1,9 @@
-from random import choice
+from random import choice, random, randint
 from typing import List
+import time
 
 from .text_phrases import (EXTRA, GREETINGS, NAMES, NEGATIVES, REASONS,
-                           REQUESTS, WHAT)
+                           REQUESTS, WHAT, TONY_NICKNAMES, TONY_PHRASES)
 
 
 def detect(text: str, options: List[str]) -> bool:
@@ -66,3 +67,10 @@ def question_about_friends_online(data: dict) -> bool:
 
 def no_prompt():
     return choice(WHAT)
+
+def tony_response():
+    if random() <= 0.35:
+        time.sleep(randint(3,11))
+        return choice(TONY_PHRASES) + ' ' + choice(TONY_NICKNAMES)
+    else:
+        return None

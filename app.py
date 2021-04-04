@@ -3,11 +3,11 @@ import time
 
 from flask import Flask, request
 
-from common import send_message
+from common import send_message, send_message_tony
 from interaction.conversation import (generate_excuse, no_prompt, oi_huey,
                                       question_about_friends_online,
                                       question_about_last_game,
-                                      request_to_do_something)
+                                      request_to_do_something, tony_response)
 from services.dota_game_service import (generate_old_game_notification,
                                         get_last_match_data)
 from services.steam_service import generate_friends_online_message
@@ -33,15 +33,18 @@ def webhook():
         if oi_huey(data):
             if question_about_last_game(data):
                 send_message(generate_old_game_notification(get_last_match_data()))
-
+                send_message_tony(tony_response())
+                
             elif question_about_friends_online(data):
                 send_message(generate_friends_online_message())
-
+                
             elif request_to_do_something(data):
                 send_message(generate_excuse())
+                send_message_tony(tony_response())
 
             else:
                 send_message(no_prompt())
+
         
     return "ok", 200
 
