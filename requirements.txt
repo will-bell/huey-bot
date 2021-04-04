@@ -3,3 +3,5 @@ gunicorn==19.6.0
 requests==2.24.0
 sqlalchemy==1.4.3
 flask-sqlalchemy==2.5.1
+rq==1.8.0
+redis==3.5.3
