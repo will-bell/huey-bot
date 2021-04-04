@@ -3,7 +3,7 @@ import time
 from typing import NamedTuple, Tuple, Dict
 
 import requests
-from common import send_message
+from common import send_message_as_huey
 
 API_URL = "https://api.opendota.com/api/"
 
@@ -225,7 +225,7 @@ def dota_game_service(last_game_state: LastGameState):
                         update_last_game_state(last_game_state, match_data)
 
                         # Post to the group chat
-                        send_message(generate_game_notification(last_game_state))
+                        send_message_as_huey(generate_game_notification(last_game_state))
 
                     else:
                         last_game_state.last_query_time = time.time()

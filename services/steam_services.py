@@ -4,7 +4,7 @@ from enum import Enum
 from typing import List
 
 import requests
-from common import send_message, send_message_to_test_group
+from common import send_message_to_test_group
 
 HOUSTON_STEAM64 = '76561198057018373'
 
