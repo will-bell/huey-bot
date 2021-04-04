@@ -17,7 +17,7 @@ from services.dota_game_service import (dota_game_service,
                                         get_last_match_data)
 from services.keep_alive_service import keep_alive
 # from services.post_service import post_queue
-from services.steam_service import generate_friends_online_message
+from services.steam_services import generate_friends_online_message
 
 app = Flask(__name__)
 
