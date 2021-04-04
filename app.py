@@ -1,6 +1,6 @@
-from importlib import reload
 import logging
 import time
+from importlib import reload
 from multiprocessing import Manager, Process, Value
 
 from flask import Flask, request
@@ -12,11 +12,11 @@ from interaction.conversation import (generate_excuse, no_prompt, oi_huey,
                                       question_about_friends_online,
                                       question_about_last_game,
                                       request_to_do_something, tony_response)
-from post_service import post_queue
 from services.dota_game_service import (dota_game_service,
                                         generate_old_game_notification,
                                         get_last_match_data)
 from services.keep_alive_service import keep_alive
+from services.post_service import post_queue
 from services.steam_service import generate_friends_online_message
 
 app = Flask(__name__)
