@@ -16,7 +16,7 @@ from services.dota_game_service import (dota_game_service,
                                         generate_old_game_notification,
                                         get_last_match_data)
 from services.keep_alive_service import keep_alive
-from services.post_service import post_queue
+# from services.post_service import post_queue
 from services.steam_service import generate_friends_online_message
 
 app = Flask(__name__)
@@ -51,7 +51,10 @@ def webhook():
 
 @app.route('/keep_alive', methods=['POST'])
 def keep_alive_webhook():
-    post_queue(send_message, 'pong')
+    # post_queue(send_message, 'pong')
+
+    send_message('pong')
+
     return "ok", 200
 
 if __name__ == '__main__':
