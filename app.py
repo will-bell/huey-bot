@@ -9,7 +9,7 @@ from interaction.conversation import (generate_excuse, no_prompt, oi_huey,
                                       question_about_friends_online,
                                       question_about_last_game,
                                       request_to_do_something, tony_response)
-from post_service import post_queue
+# from post_service import post_queue
 from steam_service import generate_friends_online_message
 
 app = Flask(__name__)
