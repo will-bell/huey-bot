@@ -3,7 +3,7 @@ import os
 import requests
 from rq import Queue
 
-from app import conn
+from worker import conn
 
 HUEY_BOT_ID = os.getenv('HUEY_BOT_ID')
 TONY_BOT_ID = os.getenv('TONY_BOT_ID')
