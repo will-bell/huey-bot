@@ -114,28 +114,30 @@ def update_friends_online_state(state: FriendsOnlineState, announce: bool = Fals
         if entry['steamid'] == HOUSTON_STEAM64:
 
             # Compare Houston's previous and current statuses
-            houston_prev_state = state.Houston
-            houston_curr_state = entry['personastate']
+            houston_prev_state = state.Houston > 0
+            houston_curr_state = entry['personastate'] > 0
             if houston_prev_state != houston_curr_state:
 
                 # If they are different, then update and send a message about the change
                 state.Houston = houston_curr_state
                 if announce:
-                    send_message(f'I am now {houston_curr_state}')
+                    text = 'online' if houston_curr_state else 'offline'
+                    send_message(f'I am now {text}')
 
 
         else:
             friend = FRIENDS_MAP_64[entry['steamid']]
 
             # Compare the friend's previous and current statuses
-            friend_prev_state = state.__getattribute__(friend)
-            friend_curr_state = entry['personastate']
+            friend_prev_state = state.__getattribute__(friend) > 0
+            friend_curr_state = entry['personastate'] > 0
             if friend_prev_state != friend_curr_state:
                 
                 # If they are different, then update and send a message about the change
                 state.__setattr__(friend, friend_curr_state)
                 if announce:
-                    send_message(f'{friend} is now {STEAM_STATUS_TEXT_MAP[friend_curr_state]}')
+                    text = 'online' if friend_curr_state else 'offline'
+                    send_message(f'{friend} is now {text}')
 
 
 def online_status_service(loop: bool):
@@ -146,6 +148,6 @@ def online_status_service(loop: bool):
     state.last_update_time = time.time()
 
     while loop:
-        if time.time() - state.last_update_time >= 2.:
+        if time.time() - state.last_update_time >= 10.:
             update_friends_online_state(state, True)
             state.last_update_time = time.time()
