@@ -1,5 +1,5 @@
 from multiprocessing import Process
-from time import time
+import time
 
 from services.keep_alive_service import keep_alive_service
 from services.steam_services import online_status_service
