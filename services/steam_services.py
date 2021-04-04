@@ -76,6 +76,9 @@ def generate_friends_online_message() -> str:
     if len(friends_online) == 2:
         return f'{friends_online[0]} and {friends_online[1]} are online'
 
+    if friends_online[0] == 'I':
+        return "Only I'm online"
+        
     return f'Just {friends_online[0]} is online'
 
 
@@ -127,7 +130,7 @@ def update_friends_online_state(state: FriendsOnlineState, announce: bool = Fals
                 state.Houston = houston_curr_state
                 if announce:
                     text = 'online' if houston_curr_state else 'offline'
-                    send_message_to_test_group(f'I am now {text}')
+                    send_message_to_test_group(f'I am now {text}')          # For now we'll send these messages to the test bot
 
 
         else:
@@ -142,7 +145,7 @@ def update_friends_online_state(state: FriendsOnlineState, announce: bool = Fals
                 state.__setattr__(friend, friend_curr_state)
                 if announce:
                     text = 'online' if friend_curr_state else 'offline'
-                    send_message_to_test_group(f'{friend} is now {text}')
+                    send_message_to_test_group(f'{friend} is now {text}')   # For now we'll send these messages to the test bot
 
 
 def online_status_service(loop: bool):
