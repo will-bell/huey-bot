@@ -2,8 +2,10 @@ import time
 from multiprocessing import Value
 
 import requests
-
 from common import send_message
+
+from services.post_service import post_queue
+
 
 def keep_alive(loop: Value):
     url = 'https://huey-bot.herokuapp.com/keep_alive'
@@ -11,8 +13,12 @@ def keep_alive(loop: Value):
     last_time = time.time()
     while loop.value:
         if time.time() - last_time > 10:
-            res = requests.post(url=url)
-            # print('ping')
+            post_queue(send_message, 'ping')
+            
+            requests.post(url=url)
+            
             last_time = time.time()
 
-            send_message("I'm still alive")
+
+if __name__ == '__main__':
+    keep_alive(True)

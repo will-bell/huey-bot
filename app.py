@@ -1,3 +1,4 @@
+from importlib import reload
 import logging
 import time
 from multiprocessing import Manager, Process, Value
@@ -11,6 +12,7 @@ from interaction.conversation import (generate_excuse, no_prompt, oi_huey,
                                       question_about_friends_online,
                                       question_about_last_game,
                                       request_to_do_something, tony_response)
+from post_service import post_queue
 from services.dota_game_service import (dota_game_service,
                                         generate_old_game_notification,
                                         get_last_match_data)
@@ -49,5 +51,8 @@ def webhook():
 
 @app.route('/keep_alive', methods=['POST'])
 def keep_alive_webhook():
-    app.logger.debug('Keep alive route received a ping')
+    post_queue(send_message, 'pong')
     return "ok", 200
+
+if __name__ == '__main__':
+    app.run(debug=True, reload=False)
