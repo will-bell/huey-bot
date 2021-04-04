@@ -1,10 +1,10 @@
 import os
 import time
 from enum import Enum
-from typing import List, NamedTuple
+from typing import List
 
 import requests
-from common import send_message
+from common import send_message, send_message_to_test_group
 
 HOUSTON_STEAM64 = '76561198057018373'
 
@@ -23,7 +23,7 @@ FRIEND_LIST = list(FRIENDS_MAP_64.values())
 STEAM_API_KEY = os.getenv('STEAM_API_KEY')
 STEAM64_ID_LIST = ','.join(list(FRIENDS_MAP_64.keys()) + [HOUSTON_STEAM64])
 
-STEAM_API_URL = 'http://api.steampowered.com/ISteamUser/GetPlayerSummaries/v0002/'
+STEAM_API_URL = 'http://api.steampowered.com/ISteamUser/GetPlayerSummaries/v2/'
 STEAM_API_PARAMS = {'key': STEAM_API_KEY, 'steamids': STEAM64_ID_LIST}
 
 
@@ -50,7 +50,7 @@ def get_friends_online() -> List[str]:
     friends_online = []
     houston_online = False
     for entry in data:
-        if entry['personastate'] == 1:
+        if entry['profilestate'] == 1:
             if entry['steamid'] == HOUSTON_STEAM64:
                 houston_online = True
             else:
@@ -104,6 +104,11 @@ class FriendsOnlineState:
         self.Houston = -1
 
 
+ONLINE_INSULTS = [
+    ''
+]
+
+
 def update_friends_online_state(state: FriendsOnlineState, announce: bool = False):
     response = requests.get(url=STEAM_API_URL, params=STEAM_API_PARAMS)
 
@@ -115,14 +120,14 @@ def update_friends_online_state(state: FriendsOnlineState, announce: bool = Fals
 
             # Compare Houston's previous and current statuses
             houston_prev_state = state.Houston > 0
-            houston_curr_state = entry['personastate'] > 0
+            houston_curr_state = entry['profilestate'] > 0
             if houston_prev_state != houston_curr_state:
 
                 # If they are different, then update and send a message about the change
                 state.Houston = houston_curr_state
                 if announce:
                     text = 'online' if houston_curr_state else 'offline'
-                    send_message(f'I am now {text}')
+                    send_message_to_test_group(f'I am now {text}')
 
 
         else:
@@ -130,14 +135,14 @@ def update_friends_online_state(state: FriendsOnlineState, announce: bool = Fals
 
             # Compare the friend's previous and current statuses
             friend_prev_state = state.__getattribute__(friend) > 0
-            friend_curr_state = entry['personastate'] > 0
+            friend_curr_state = entry['profilestate'] > 0
             if friend_prev_state != friend_curr_state:
                 
                 # If they are different, then update and send a message about the change
                 state.__setattr__(friend, friend_curr_state)
                 if announce:
                     text = 'online' if friend_curr_state else 'offline'
-                    send_message(f'{friend} is now {text}')
+                    send_message_to_test_group(f'{friend} is now {text}')
 
 
 def online_status_service(loop: bool):
